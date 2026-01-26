@@ -3,86 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isotonic Layer: Universal Recommendation Debiasing</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+    <title>Hailing Cheng | Machine Learning Engineer</title>
     <style>
-        :root { --accent: #0073b1; }
-        header { border-bottom: 2px solid var(--accent); padding-bottom: 1rem; }
-        .authors { font-style: italic; color: #555; }
-        .tag { background: var(--accent); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; }
-        .math { font-family: "Courier New", Courier, monospace; background: #f4f4f4; padding: 1rem; border-left: 4px solid var(--accent); }
+        :root {
+            --primary: #2c3e50;
+            --accent: #0073b1; /* LinkedIn Blue */
+            --bg: #fafafa;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--bg);
+        }
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 2rem;
+        }
+        h1 { margin: 0; color: var(--primary); font-size: 2.5rem; }
+        .subtitle { color: #666; font-size: 1.2rem; font-weight: 300; margin-top: 0.5rem; }
+        
+        /* Navigation / Socials */
+        .social-links { margin-top: 1rem; }
+        .social-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Project Cards */
+        .section-title {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none; /* Removes underline from the whole card */
+            display: block;
+            color: inherit;
+        }
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: var(--accent);
+        }
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .project-desc { font-size: 0.95rem; color: #555; }
+        .tags { margin-top: 1rem; }
+        .tag {
+            background: #eef3f8;
+            color: var(--accent);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-right: 5px;
+        }
+        .new-badge {
+            background: #d93f0b;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
+
     <header>
-        <h1>Isotonic Layer: A Universal Framework for Recommendation Debiasing</h1>
-        <p class="authors">By Hailing Cheng, Yafang Yang, Hemeng Tao, and Fengyu Zhang (Linkedin Inc) [2026]</p>
-        <div>
-            <span class="tag">Deep Learning</span>
-            <span class="tag">Calibration</span>
-            <span class="tag">Recommendation Systems</span>
+        <h1>Hailing Cheng</h1>
+        <div class="subtitle">Machine Learning Engineer @ LinkedIn</div>
+        <div class="social-links">
+            <a href="https://github.com/hailingc">GitHub</a>
+            <a href="https://linkedin.com/in/hailing-cheng">LinkedIn</a>
+            <a href="mailto:haicheng@linkedin.com">Email</a>
         </div>
     </header>
 
-    <section id="abstract">
-        <h2>Abstract</h2>
-        <p>
-            Traditional recommendation systems struggle to integrate monotonic guarantees into modern deep learning pipelines. While 
-            <b>Platt Scaling</b> offers smoothness and <b>Isotonic Regression</b> provides flexibility, neither fits perfectly into end-to-end 
-            gradient-based optimization[cite: 485]. We introduce the <strong>Isotonic Layer</strong>, a differentiable framework that 
-            integrates piecewise linear fitting directly into neural architectures to enforce global monotonic inductive bias[cite: 486, 487].
-        </p>
-    </section>
+    <main>
+        <div class="section-title">Latest Research & Blogs</div>
 
-    <section id="problem">
-        <h2>The Challenge: Task Heterogeneity</h2>
-        <p>
-            Industrial recommenders are inherently multi-task (MTL), optimizing for diverse behaviors like clicks and purchases 
-            that have vastly different bias profiles[cite: 520, 521]. Standard neural layers often suffer from "inversion errors"—where 
-            higher quality items are scored lower due to data noise—leading to inconsistent rankings[cite: 519].
-        </p>
-    </section>
+        <a href="isotonic-layer.html" class="project-card">
+            <div class="project-title">
+                Isotonic Layer: Universal Recommendation Debiasing
+                <span class="new-badge">NEW PAPER</span>
+            </div>
+            <div class="project-desc">
+                A novel, differentiable framework that integrates piecewise linear fitting directly into neural architectures to enforce monotonic inductive bias in recommendation systems.
+            </div>
+            <div class="tags">
+                <span class="tag">Deep Learning</span>
+                <span class="tag">Calibration</span>
+                <span class="tag">RecSys</span>
+            </div>
+        </a>
 
-    <section id="methodology">
-        <h2>The Isotonic Layer Architecture</h2>
-        <p>Our approach transforms raw scores through a bucket-based cumulative construction that is fully compatible with backpropagation[cite: 565, 566].</p>
-        
-        <h3>Mathematical Formulation</h3>
-        <div class="math">
-            y = w_0(k_1 - k_0) + w_1(k_2 - k_1) + ... + w_n(x - k_n)
-        </div>
-        <p>The layer operates in five key steps[cite: 570, 577, 578, 582]:</p>
-        <ol>
-            <li><strong>Input Clipping:</strong> The input is clipped to a predefined range (default [-17, 8]) to improve numerical stability[cite: 570, 571].</li>
-            <li><strong>Bucketization:</strong> The interval is discretized into <i>N</i> fixed-width buckets[cite: 577].</li>
-            <li><strong>Activation Vector Construction:</strong> An activation vector is built to represent the accumulated contribution of buckets[cite: 577].</li>
-            <li><strong>Weighted Aggregation:</strong> Bucket weights are parameterized using <b>ReLU activations</b> to strictly enforce non-negativity, ensuring monotonicity[cite: 578, 580].</li>
-            <li><strong>Output Activation:</strong> A final sigmoid transformation produces the calibrated probability[cite: 582].</li>
-        </ol>
-    </section>
+        <a href="#" class="project-card" style="opacity: 0.6; pointer-events: none;">
+            <div class="project-title">Future Research Project</div>
+            <div class="project-desc">
+                Upcoming work on multi-task learning and large-scale model optimization.
+            </div>
+            <div class="tags">
+                <span class="tag">Coming Soon</span>
+            </div>
+        </a>
 
-    <section id="results">
-        <h2>Real-World Impact</h2>
-        <p>
-            Extensive A/B testing at scale demonstrates significant lifts in core metrics:
-        </p>
-        <ul>
-            <li><strong>+0.63%</strong> lift in Weekly Active Users[cite: 656].</li>
-            <li><strong>+1.5% to +1.9%</strong> gains in Evaluation AUC for downstream tasks[cite: 637].</li>
-            <li><strong>Reduced Variance:</strong> The layer stabilizes model predictions, aligning scores closer to the empirical distribution of training labels[cite: 642, 643].</li>
-        </ul>
-    </section>
-
-    <section id="conclusion">
-        <h2>Conclusion</h2>
-        <p>
-            The Isotonic Layer bridges the gap between flexible neural representations and the structural necessity of monotonic calibration[cite: 683]. 
-            By decoupling latent relevance from systemic bias, it provides a scalable foundation for the next generation of unbiased machine learning systems[cite: 692, 696].
-        </p>
-    </section>
+    </main>
 
     <footer>
-        <p>Read the full paper or explore the code at: <a href="https://github.com/hailinge/Isotonic-Layer">github.com/hailinge/Isotonic-Layer</a> [cite: 494]</p>
+        &copy; 2026 Hailing Cheng. Hosted on GitHub Pages.
     </footer>
+
 </body>
 </html>
