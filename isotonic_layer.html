@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isotonic Layer: Universal Recommendation Debiasing</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+    <style>
+        :root { --accent: #0073b1; }
+        header { border-bottom: 2px solid var(--accent); padding-bottom: 1rem; }
+        .authors { font-style: italic; color: #555; }
+        .tag { background: var(--accent); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; }
+        .math { font-family: "Courier New", Courier, monospace; background: #f4f4f4; padding: 1rem; border-left: 4px solid var(--accent); }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Isotonic Layer: A Universal Framework for Recommendation Debiasing</h1>
+        <p class="authors">By Hailing Cheng, Yafang Yang, Hemeng Tao, and Fengyu Zhang (Linkedin Inc) [2026]</p>
+        <div>
+            <span class="tag">Deep Learning</span>
+            <span class="tag">Calibration</span>
+            <span class="tag">Recommendation Systems</span>
+        </div>
+    </header>
+
+    <section id="abstract">
+        <h2>Abstract</h2>
+        <p>
+            Traditional recommendation systems struggle to integrate monotonic guarantees into modern deep learning pipelines. While 
+            <b>Platt Scaling</b> offers smoothness and <b>Isotonic Regression</b> provides flexibility, neither fits perfectly into end-to-end 
+            gradient-based optimization[cite: 485]. We introduce the <strong>Isotonic Layer</strong>, a differentiable framework that 
+            integrates piecewise linear fitting directly into neural architectures to enforce global monotonic inductive bias[cite: 486, 487].
+        </p>
+    </section>
+
+    <section id="problem">
+        <h2>The Challenge: Task Heterogeneity</h2>
+        <p>
+            Industrial recommenders are inherently multi-task (MTL), optimizing for diverse behaviors like clicks and purchases 
+            that have vastly different bias profiles[cite: 520, 521]. Standard neural layers often suffer from "inversion errors"—where 
+            higher quality items are scored lower due to data noise—leading to inconsistent rankings[cite: 519].
+        </p>
+    </section>
+
+    <section id="methodology">
+        <h2>The Isotonic Layer Architecture</h2>
+        <p>Our approach transforms raw scores through a bucket-based cumulative construction that is fully compatible with backpropagation[cite: 565, 566].</p>
+        
+        <h3>Mathematical Formulation</h3>
+        <div class="math">
+            y = w_0(k_1 - k_0) + w_1(k_2 - k_1) + ... + w_n(x - k_n)
+        </div>
+        <p>The layer operates in five key steps[cite: 570, 577, 578, 582]:</p>
+        <ol>
+            <li><strong>Input Clipping:</strong> The input is clipped to a predefined range (default [-17, 8]) to improve numerical stability[cite: 570, 571].</li>
+            <li><strong>Bucketization:</strong> The interval is discretized into <i>N</i> fixed-width buckets[cite: 577].</li>
+            <li><strong>Activation Vector Construction:</strong> An activation vector is built to represent the accumulated contribution of buckets[cite: 577].</li>
+            <li><strong>Weighted Aggregation:</strong> Bucket weights are parameterized using <b>ReLU activations</b> to strictly enforce non-negativity, ensuring monotonicity[cite: 578, 580].</li>
+            <li><strong>Output Activation:</strong> A final sigmoid transformation produces the calibrated probability[cite: 582].</li>
+        </ol>
+    </section>
+
+    <section id="results">
+        <h2>Real-World Impact</h2>
+        <p>
+            Extensive A/B testing at scale demonstrates significant lifts in core metrics:
+        </p>
+        <ul>
+            <li><strong>+0.63%</strong> lift in Weekly Active Users[cite: 656].</li>
+            <li><strong>+1.5% to +1.9%</strong> gains in Evaluation AUC for downstream tasks[cite: 637].</li>
+            <li><strong>Reduced Variance:</strong> The layer stabilizes model predictions, aligning scores closer to the empirical distribution of training labels[cite: 642, 643].</li>
+        </ul>
+    </section>
+
+    <section id="conclusion">
+        <h2>Conclusion</h2>
+        <p>
+            The Isotonic Layer bridges the gap between flexible neural representations and the structural necessity of monotonic calibration[cite: 683]. 
+            By decoupling latent relevance from systemic bias, it provides a scalable foundation for the next generation of unbiased machine learning systems[cite: 692, 696].
+        </p>
+    </section>
+
+    <footer>
+        <p>Read the full paper or explore the code at: <a href="https://github.com/hailinge/Isotonic-Layer">github.com/hailinge/Isotonic-Layer</a> [cite: 494]</p>
+    </footer>
+</body>
+</html>
