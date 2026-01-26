@@ -3,86 +3,505 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isotonic Layer: Universal Recommendation Debiasing</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+    <title>Isotonic Layer: Universal Recommendation Debiasing | Hailing Cheng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #0073b1; }
-        header { border-bottom: 2px solid var(--accent); padding-bottom: 1rem; }
-        .authors { font-style: italic; color: #555; }
-        .tag { background: var(--accent); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; }
-        .math { font-family: "Courier New", Courier, monospace; background: #f4f4f4; padding: 1rem; border-left: 4px solid var(--accent); }
+        :root {
+            --primary: #1a2f4a;
+            --accent: #e85d04;
+            --accent-light: #faa307;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --code-bg: #f7f8fc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            line-height: 1.8;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        /* Subtle pattern background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(232, 93, 4, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(250, 163, 7, 0.04) 0%, transparent 50%),
+                linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Article Header */
+        .article-header {
+            padding: 4rem 0 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .article-badge {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .authors {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .authors strong {
+            color: var(--text);
+        }
+
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: #f0f4f8;
+            color: var(--primary);
+            padding: 0.4rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Paper Link Button */
+        .paper-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            text-decoration: none;
+            padding: 0.85rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(232, 93, 4, 0.25);
+        }
+
+        .paper-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 93, 4, 0.35);
+        }
+
+        .paper-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Article Content */
+        article {
+            padding: 3rem 0;
+        }
+
+        article h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        article h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.2em;
+            bottom: 0.2em;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-light));
+            border-radius: 2px;
+        }
+
+        article h2:first-child {
+            margin-top: 0;
+        }
+
+        article h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2rem 0 0.75rem;
+        }
+
+        article p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        article ul, article ol {
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+        }
+
+        article li {
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        article li strong {
+            color: var(--primary);
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        /* Math/Code Block */
+        .math-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 47, 74, 0.08);
+        }
+
+        .result-value {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Steps List */
+        .steps-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .steps-list li {
+            position: relative;
+            padding-left: 3.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .steps-list li::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2.25rem;
+            height: 2.25rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .article-header {
+                padding: 2.5rem 0 2rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            article h2 {
+                font-size: 1.35rem;
+            }
+
+            .result-value {
+                font-size: 1.6rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Isotonic Layer: A Universal Framework for Recommendation Debiasing</h1>
-        <p class="authors">By Hailing Cheng, Yafang Yang, Hemeng Tao, and Fengyu Zhang (Linkedin Inc) [2026]</p>
-        <div>
-            <span class="tag">Deep Learning</span>
-            <span class="tag">Calibration</span>
-            <span class="tag">Recommendation Systems</span>
-        </div>
-    </header>
+    <div class="container">
+        <nav>
+            <a href="index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Blog
+            </a>
+        </nav>
 
-    <section id="abstract">
-        <h2>Abstract</h2>
-        <p>
-            Traditional recommendation systems struggle to integrate monotonic guarantees into modern deep learning pipelines. While 
-            <b>Platt Scaling</b> offers smoothness and <b>Isotonic Regression</b> provides flexibility, neither fits perfectly into end-to-end 
-            gradient-based optimization[cite: 485]. We introduce the <strong>Isotonic Layer</strong>, a differentiable framework that 
-            integrates piecewise linear fitting directly into neural architectures to enforce global monotonic inductive bias[cite: 486, 487].
-        </p>
-    </section>
+        <header class="article-header">
+            <div class="article-meta">
+                <span class="article-date">January 2026</span>
+                <span class="article-badge">Research Paper</span>
+            </div>
+            <h1>Isotonic Layer: A Universal Framework for Recommendation Debiasing</h1>
+            <p class="authors">
+                By <strong>Hailing Cheng</strong>, Yafang Yang, Hemeng Tao, and Fengyu Zhang<br>
+                LinkedIn Inc.
+            </p>
+            <div class="article-tags">
+                <span class="tag">Deep Learning</span>
+                <span class="tag">Calibration</span>
+                <span class="tag">Recommendation Systems</span>
+                <span class="tag">Debiasing</span>
+            </div>
+            <a href="debias.pdf" class="paper-link" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Download Full Paper (PDF)
+            </a>
+        </header>
 
-    <section id="problem">
-        <h2>The Challenge: Task Heterogeneity</h2>
-        <p>
-            Industrial recommenders are inherently multi-task (MTL), optimizing for diverse behaviors like clicks and purchases 
-            that have vastly different bias profiles[cite: 520, 521]. Standard neural layers often suffer from "inversion errors"—where 
-            higher quality items are scored lower due to data noise—leading to inconsistent rankings[cite: 519].
-        </p>
-    </section>
+        <article>
+            <h2>Abstract</h2>
+            <p>
+                Traditional recommendation systems struggle to integrate monotonic guarantees into modern deep learning pipelines. While <strong>Platt Scaling</strong> offers smoothness and <strong>Isotonic Regression</strong> provides flexibility, neither fits perfectly into end-to-end gradient-based optimization. 
+            </p>
+            <p>
+                We introduce the <strong>Isotonic Layer</strong>—a novel, differentiable framework that integrates piecewise linear fitting directly into neural architectures to enforce global monotonic inductive bias. This approach enables seamless integration with existing deep learning workflows while providing theoretical guarantees on monotonicity.
+            </p>
 
-    <section id="methodology">
-        <h2>The Isotonic Layer Architecture</h2>
-        <p>Our approach transforms raw scores through a bucket-based cumulative construction that is fully compatible with backpropagation[cite: 565, 566].</p>
-        
-        <h3>Mathematical Formulation</h3>
-        <div class="math">
-            y = w_0(k_1 - k_0) + w_1(k_2 - k_1) + ... + w_n(x - k_n)
-        </div>
-        <p>The layer operates in five key steps[cite: 570, 577, 578, 582]:</p>
-        <ol>
-            <li><strong>Input Clipping:</strong> The input is clipped to a predefined range (default [-17, 8]) to improve numerical stability[cite: 570, 571].</li>
-            <li><strong>Bucketization:</strong> The interval is discretized into <i>N</i> fixed-width buckets[cite: 577].</li>
-            <li><strong>Activation Vector Construction:</strong> An activation vector is built to represent the accumulated contribution of buckets[cite: 577].</li>
-            <li><strong>Weighted Aggregation:</strong> Bucket weights are parameterized using <b>ReLU activations</b> to strictly enforce non-negativity, ensuring monotonicity[cite: 578, 580].</li>
-            <li><strong>Output Activation:</strong> A final sigmoid transformation produces the calibrated probability[cite: 582].</li>
-        </ol>
-    </section>
+            <h2>The Challenge: Task Heterogeneity in Recommendations</h2>
+            <p>
+                Industrial recommender systems are inherently multi-task (MTL), optimizing for diverse user behaviors such as clicks, purchases, and engagement. Each of these tasks exhibits vastly different bias profiles, making it challenging to maintain consistent and fair rankings across all objectives.
+            </p>
+            <div class="highlight-box">
+                <p>
+                    <strong>The Core Problem:</strong> Standard neural network layers often suffer from "inversion errors"—where higher quality items are paradoxically scored lower due to data noise and sampling bias. This leads to inconsistent rankings and suboptimal user experience.
+                </p>
+            </div>
+            <p>
+                Traditional calibration methods like Platt Scaling assume a specific functional form (sigmoid), which may not capture the true relationship between predicted scores and actual probabilities. Isotonic Regression, while more flexible, is non-differentiable and cannot be trained end-to-end with neural networks.
+            </p>
 
-    <section id="results">
-        <h2>Real-World Impact</h2>
-        <p>
-            Extensive A/B testing at scale demonstrates significant lifts in core metrics:
-        </p>
-        <ul>
-            <li><strong>+0.63%</strong> lift in Weekly Active Users[cite: 656].</li>
-            <li><strong>+1.5% to +1.9%</strong> gains in Evaluation AUC for downstream tasks[cite: 637].</li>
-            <li><strong>Reduced Variance:</strong> The layer stabilizes model predictions, aligning scores closer to the empirical distribution of training labels[cite: 642, 643].</li>
-        </ul>
-    </section>
+            <h2>The Isotonic Layer Architecture</h2>
+            <p>
+                Our approach transforms raw prediction scores through a bucket-based cumulative construction that is fully compatible with backpropagation. The key insight is to parameterize the calibration function as a piecewise linear function with learnable, non-negative slopes—guaranteeing monotonicity by construction.
+            </p>
 
-    <section id="conclusion">
-        <h2>Conclusion</h2>
-        <p>
-            The Isotonic Layer bridges the gap between flexible neural representations and the structural necessity of monotonic calibration[cite: 683]. 
-            By decoupling latent relevance from systemic bias, it provides a scalable foundation for the next generation of unbiased machine learning systems[cite: 692, 696].
-        </p>
-    </section>
+            <h3>Mathematical Formulation</h3>
+            <div class="math-block">
+                y = w₀(k₁ - k₀) + w₁(k₂ - k₁) + ... + wₙ(x - kₙ)
+            </div>
+            <p>
+                Where <em>wᵢ ≥ 0</em> are learnable weights enforced via ReLU activation, and <em>kᵢ</em> are fixed bucket boundaries.
+            </p>
 
-    <footer>
-        <p>Read the full paper or explore the code at: <a href="https://github.com/hailinge/Isotonic-Layer">github.com/hailinge/Isotonic-Layer</a> [cite: 494]</p>
-    </footer>
+            <h3>Five Key Steps</h3>
+            <ol class="steps-list">
+                <li>
+                    <strong>Input Clipping:</strong> The input score is clipped to a predefined range (default [-17, 8]) to improve numerical stability and handle outliers gracefully.
+                </li>
+                <li>
+                    <strong>Bucketization:</strong> The input interval is discretized into <em>N</em> fixed-width buckets, creating a grid over which the piecewise linear function is defined.
+                </li>
+                <li>
+                    <strong>Activation Vector Construction:</strong> An activation vector is built to represent the accumulated contribution of each bucket up to the current input value.
+                </li>
+                <li>
+                    <strong>Weighted Aggregation:</strong> Bucket weights are parameterized using <strong>ReLU activations</strong> to strictly enforce non-negativity, which mathematically guarantees monotonicity of the output.
+                </li>
+                <li>
+                    <strong>Output Activation:</strong> A final sigmoid transformation produces the calibrated probability, ensuring outputs are in the valid [0, 1] range.
+                </li>
+            </ol>
+
+            <h2>Key Benefits</h2>
+            <ul>
+                <li><strong>Differentiability:</strong> Unlike traditional isotonic regression, the Isotonic Layer is fully differentiable, enabling end-to-end training with gradient descent.</li>
+                <li><strong>Monotonicity Guarantee:</strong> The ReLU-parameterized weights mathematically ensure the output is monotonically increasing with respect to input scores.</li>
+                <li><strong>Flexibility:</strong> The piecewise linear structure can approximate arbitrary monotonic functions, adapting to different task distributions.</li>
+                <li><strong>Plug-and-Play:</strong> Can be seamlessly integrated as a final layer in any neural network architecture without architectural changes.</li>
+            </ul>
+
+            <h2>Real-World Impact at LinkedIn</h2>
+            <p>
+                We deployed the Isotonic Layer across multiple recommendation surfaces at LinkedIn and conducted extensive A/B testing at scale. The results demonstrate significant improvements across key business metrics:
+            </p>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-value">+0.63%</div>
+                    <div class="result-label">Weekly Active Users</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">+1.5-1.9%</div>
+                    <div class="result-label">Evaluation AUC</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">↓ Variance</div>
+                    <div class="result-label">Model Stability</div>
+                </div>
+            </div>
+
+            <p>
+                Beyond the quantitative metrics, we observed that the Isotonic Layer stabilizes model predictions, aligning scores closer to the empirical distribution of training labels. This reduces the gap between predicted probabilities and observed outcomes, leading to more trustworthy recommendations.
+            </p>
+
+            <h2>Conclusion</h2>
+            <p>
+                The Isotonic Layer bridges the gap between flexible neural representations and the structural necessity of monotonic calibration. By decoupling latent relevance estimation from systemic bias correction, it provides a scalable foundation for building the next generation of unbiased machine learning systems.
+            </p>
+            <div class="highlight-box">
+                <p>
+                    <strong>Key Takeaway:</strong> The Isotonic Layer is a simple yet powerful technique that can be added to any recommendation model to enforce monotonicity, improve calibration, and reduce bias—all while maintaining full compatibility with gradient-based optimization.
+                </p>
+            </div>
+        </article>
+
+        <footer>
+            <p>
+                © 2026 Hailing Cheng · <a href="index.html">Back to Blog</a> · <a href="debias.pdf" target="_blank">Download Paper</a>
+            </p>
+        </footer>
+    </div>
 </body>
 </html>
