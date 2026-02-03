@@ -1,0 +1,83 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{zhai2024actions}
+\citation{vaswani2017attention,kang2018sasrec,sun2019bert4rec,pei2021end2endbehaviorretrieval,han2025mtgr}
+\citation{kang2023llms,zhang2025recommendation,geng2022recommendation}
+\citation{deng2025onerec,liang2025tbgrecall}
+\citation{naumov2019dlrm,cheng2016wide,wang2021dcnv2}
+\@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\citation{su2023rope}
+\citation{raffel2023rab}
+\citation{ma2018modeling}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Interleaved generative recommenders treat items and actions as a single token stream. Action $a_2$ attends to all prior tokens, obscuring the direct causal dependency $i_2 \rightarrow a_2$ and introducing attention noise.}}{2}{figure.caption.5}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:interleaved-attn}{{1}{2}{Interleaved generative recommenders treat items and actions as a single token stream. Action $a_2$ attends to all prior tokens, obscuring the direct causal dependency $i_2 \rightarrow a_2$ and introducing attention noise}{figure.caption.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces True causal structure of user interactions. Each action $a_n$ is a response to the corresponding item $i_n$, conditioned on prior history. This structure is not explicitly represented by interleaved self-attention.}}{2}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:true-causality}{{2}{2}{True causal structure of user interactions. Each action $a_n$ is a response to the corresponding item $i_n$, conditioned on prior history. This structure is not explicitly represented by interleaved self-attention}{figure.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Traditional Generative Recommender (Interleaving Item and Action Tokens) architecture: the item and action tokens are interleaved before the transformer layers}}{3}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:gr_arch}{{3}{3}{Traditional Generative Recommender (Interleaving Item and Action Tokens) architecture: the item and action tokens are interleaved before the transformer layers}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Architecture overview and attention mechanism}{3}{section.2}\protected@file@percent }
+\newlabel{sec:attn_mechanism}{{2}{3}{Architecture overview and attention mechanism}{section.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Illustrative toy sequences for Users A and B. The sequences demonstrate contrasting behavioral patterns: User A consistently exhibits positive interactions (e.g., "Like") with dog-related items and negative interactions with cat-related items, while User B exhibits the inverse preference profile. This highlights the model's task of capturing item-action dependencies for future state prediction.}}{3}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:toy_seq}{{4}{3}{Illustrative toy sequences for Users A and B. The sequences demonstrate contrasting behavioral patterns: User A consistently exhibits positive interactions (e.g., "Like") with dog-related items and negative interactions with cat-related items, while User B exhibits the inverse preference profile. This highlights the model's task of capturing item-action dependencies for future state prediction}{figure.caption.8}{}}
+\citation{huang2025towards}
+\citation{wei2025layout}
+\citation{dao2022flashattention}
+\@writefile{toc}{\contentsline {section}{\numberline {3}AttnLFA: Attention-based Late Fusion for Action Architecture}{4}{section.3}\protected@file@percent }
+\newlabel{sec:AttnLFA}{{3}{4}{AttnLFA: Attention-based Late Fusion for Action Architecture}{section.3}{}}
+\citation{su2023rope}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Attention-based Late Fusion for Action (AttnLFA). Item embeddings are transformed through a series of Transformer blocks (labeled as "Transformers" for clarity) to generate latent sequence representations. These representations serve as both Queries and Keys for the subsequent attention mechanism. In the final stage, action embeddings are integrated as Values via a causally-constrained attention pooling operation, conditioned on the sequence context. The resulting aggregated action representation is then passed to the prediction head for the final output.}}{5}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:late_fusion}{{5}{5}{Attention-based Late Fusion for Action (AttnLFA). Item embeddings are transformed through a series of Transformer blocks (labeled as "Transformers" for clarity) to generate latent sequence representations. These representations serve as both Queries and Keys for the subsequent attention mechanism. In the final stage, action embeddings are integrated as Values via a causally-constrained attention pooling operation, conditioned on the sequence context. The resulting aggregated action representation is then passed to the prediction head for the final output}{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces The \textbf  {query-shifting mechanism} to enforce a strict causal constraint.}}{5}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:strict_causal}{{6}{5}{The \textbf {query-shifting mechanism} to enforce a strict causal constraint}{figure.caption.10}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Performance comparison between AttnLFA and Baseline. We report the relative improvement across four key dimensions: (a) Multi-task Binary Cross Entropy (BCE) Loss, (b) evaluation Normalized Entropy (NE) for Long Dwell, Contribution, and Like actions, and (c) total training latency. AttnLFA demonstrates superior predictive accuracy (lower NE/Loss) while maintaining competitive computational efficiency.}}{6}{table.caption.11}\protected@file@percent }
+\newlabel{tab:lfa_result}{{1}{6}{Performance comparison between AttnLFA and Baseline. We report the relative improvement across four key dimensions: (a) Multi-task Binary Cross Entropy (BCE) Loss, (b) evaluation Normalized Entropy (NE) for Long Dwell, Contribution, and Like actions, and (c) total training latency. AttnLFA demonstrates superior predictive accuracy (lower NE/Loss) while maintaining competitive computational efficiency}{table.caption.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}AttnMVP: Attention based Mixed Value Pooling Architecture}{6}{section.4}\protected@file@percent }
+\newlabel{sec:AttnMVP}{{4}{6}{AttnMVP: Attention based Mixed Value Pooling Architecture}{section.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Attention-based Mixed Value Pooling (AttnMVP) architecture. Item embeddings serve as Queries and Keys in each Transformer layer, while item and action embeddings are additively fused as mixed Values. Across stacked layers, action signals are progressively injected into item representations under strict causal constraints. In the final stage, action embeddings are pooled via causally masked attention conditioned on the sequence-level item representations, and the pooled action representation is fused with the final item embedding to produce action predictions.}}{6}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:attnMVP}{{7}{6}{Attention-based Mixed Value Pooling (AttnMVP) architecture. Item embeddings serve as Queries and Keys in each Transformer layer, while item and action embeddings are additively fused as mixed Values. Across stacked layers, action signals are progressively injected into item representations under strict causal constraints. In the final stage, action embeddings are pooled via causally masked attention conditioned on the sequence-level item representations, and the pooled action representation is fused with the final item embedding to produce action predictions}{figure.caption.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Relative performance improvement of Eval Loss, major tasks' Eval Normalized Entropies (NEs) and Training Time for Baseline, AttnMVP and AttnMVP without LFA. (AttnMVP-LFA)}}{7}{table.caption.13}\protected@file@percent }
+\newlabel{tab:mvp_result}{{2}{7}{Relative performance improvement of Eval Loss, major tasks' Eval Normalized Entropies (NEs) and Training Time for Baseline, AttnMVP and AttnMVP without LFA. (AttnMVP-LFA)}{table.caption.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Future Work: AttnDHN - Attention based Dual-Helix Network}{7}{section.5}\protected@file@percent }
+\newlabel{sec:AttnDHN}{{5}{7}{Future Work: AttnDHN - Attention based Dual-Helix Network}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{7}{section.6}\protected@file@percent }
+\newlabel{sec:conclusion}{{6}{7}{Conclusion}{section.6}{}}
+\bibstyle{ACM-Reference-Format}
+\bibdata{base}
+\bibcite{cheng2016wide}{{1}{2016}{{Cheng et~al\mbox  {.}}}{{}}}
+\bibcite{dao2022flashattention}{{2}{2022}{{Dao et~al\mbox  {.}}}{{}}}
+\bibcite{deng2025onerec}{{3}{2025}{{Deng et~al\mbox  {.}}}{{}}}
+\bibcite{geng2022recommendation}{{4}{2022}{{Geng et~al\mbox  {.}}}{{}}}
+\bibcite{han2025mtgr}{{5}{2025}{{Han et~al\mbox  {.}}}{{}}}
+\bibcite{huang2025towards}{{6}{2025}{{Huang et~al\mbox  {.}}}{{}}}
+\bibcite{kang2018sasrec}{{7}{2018}{{Kang and McAuley}}{{}}}
+\bibcite{kang2023llms}{{8}{2023}{{Kang et~al\mbox  {.}}}{{}}}
+\bibcite{liang2025tbgrecall}{{9}{2025}{{Liang et~al\mbox  {.}}}{{}}}
+\bibcite{ma2018modeling}{{10}{2018}{{Ma et~al\mbox  {.}}}{{}}}
+\bibcite{naumov2019dlrm}{{11}{2019}{{Naumov et~al\mbox  {.}}}{{}}}
+\bibcite{pei2021end2endbehaviorretrieval}{{12}{2021}{{Pei et~al\mbox  {.}}}{{}}}
+\bibcite{raffel2023rab}{{13}{2023}{{Raffel et~al\mbox  {.}}}{{}}}
+\bibcite{su2023rope}{{14}{2023}{{Su et~al\mbox  {.}}}{{}}}
+\bibcite{sun2019bert4rec}{{15}{2019}{{Sun et~al\mbox  {.}}}{{}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Attention-based Dual-Helix Network (AttnDHN) architecture. Action embedding and Item embeddings are updated in pair-wise sequence in individual Transformer layer. Both transformer layer use either action and item embedding as query and key, and use a combination of item + action embedding as value. In the final stage, action embeddings are pooled via causally masked attention conditioned on the sequence-level item representations, and the pooled action representation is fused with the final item embedding to produce action predictions.}}{8}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:attnDNA}{{8}{8}{Attention-based Dual-Helix Network (AttnDHN) architecture. Action embedding and Item embeddings are updated in pair-wise sequence in individual Transformer layer. Both transformer layer use either action and item embedding as query and key, and use a combination of item + action embedding as value. In the final stage, action embeddings are pooled via causally masked attention conditioned on the sequence-level item representations, and the pooled action representation is fused with the final item embedding to produce action predictions}{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {section}{Acknowledgments}{8}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{8}{section*.18}\protected@file@percent }
+\bibcite{vaswani2017attention}{{16}{2017}{{Vaswani et~al\mbox  {.}}}{{}}}
+\bibcite{wang2021dcnv2}{{17}{2021}{{Wang et~al\mbox  {.}}}{{}}}
+\bibcite{wei2025layout}{{18}{2025}{{Wei et~al\mbox  {.}}}{{}}}
+\bibcite{zhai2024actions}{{19}{2024}{{Zhai et~al\mbox  {.}}}{{}}}
+\bibcite{zhang2025recommendation}{{20}{2025}{{Zhang et~al\mbox  {.}}}{{}}}
+\bibcite{zhao2019recommending}{{21}{2019}{{Zhao et~al\mbox  {.}}}{{}}}
+\newlabel{tocindent-1}{0pt}
+\newlabel{tocindent0}{0pt}
+\newlabel{tocindent1}{4.185pt}
+\newlabel{tocindent2}{0pt}
+\newlabel{tocindent3}{0pt}
+\newlabel{tocindent4}{0pt}
+\newlabel{tocindent5}{0pt}
+\newlabel{TotPages}{{9}{9}{}{page.9}{}}
+\gdef \@abspage@last{9}

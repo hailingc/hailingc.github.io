@@ -1,0 +1,92 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: attnmvp.aux
+The style file: ACM-Reference-Format.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: base.bib
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=200001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--empty publisher in cheng2016wide
+Warning--empty address in cheng2016wide
+Warning--page numbers missing in both pages and numpages fields in cheng2016wide
+Warning--empty publisher in dao2022flashattention
+Warning--empty address in dao2022flashattention
+Warning--page numbers missing in both pages and numpages fields in dao2022flashattention
+Warning--no number and no volume in deng2025onerec
+Warning--page numbers missing in both pages and numpages fields in deng2025onerec
+Warning--empty publisher in geng2022recommendation
+Warning--empty address in geng2022recommendation
+Warning--empty publisher in han2025mtgr
+Warning--empty address in han2025mtgr
+Warning--page numbers missing in both pages and numpages fields in han2025mtgr
+Warning--empty publisher in kang2018sasrec
+Warning--empty address in kang2018sasrec
+Warning--page numbers missing in both pages and numpages fields in kang2018sasrec
+Warning--no number and no volume in kang2023llms
+Warning--page numbers missing in both pages and numpages fields in kang2023llms
+Warning--no number and no volume in liang2025tbgrecall
+Warning--page numbers missing in both pages and numpages fields in liang2025tbgrecall
+Warning--empty publisher in ma2018modeling
+Warning--empty address in ma2018modeling
+Warning--no number and no volume in naumov2019dlrm
+Warning--page numbers missing in both pages and numpages fields in naumov2019dlrm
+Warning--empty publisher in pei2021end2endbehaviorretrieval
+Warning--empty address in pei2021end2endbehaviorretrieval
+Warning--page numbers missing in both pages and numpages fields in pei2021end2endbehaviorretrieval
+Warning--empty publisher in sun2019bert4rec
+Warning--empty address in sun2019bert4rec
+Warning--page numbers missing in both pages and numpages fields in sun2019bert4rec
+Warning--page numbers missing in both pages and numpages fields in vaswani2017attention
+Warning--empty publisher in wang2021dcnv2
+Warning--empty address in wang2021dcnv2
+Warning--page numbers missing in both pages and numpages fields in wang2021dcnv2
+Warning--empty publisher in zhao2019recommending
+Warning--empty address in zhao2019recommending
+You've used 21 entries,
+            6273 wiz_defined-function locations,
+            1631 strings with 24264 characters,
+and the built_in function-call counts, 26507 in all, are:
+= -- 2824
+> -- 1547
+< -- 0
++ -- 549
+- -- 530
+* -- 2413
+:= -- 2955
+add.period$ -- 93
+call.type$ -- 21
+change.case$ -- 261
+chr.to.int$ -- 21
+cite$ -- 57
+duplicate$ -- 1987
+empty$ -- 1422
+format.name$ -- 614
+if$ -- 6046
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 74
+newline$ -- 245
+num.names$ -- 147
+pop$ -- 1033
+preamble$ -- 1
+purify$ -- 424
+quote$ -- 0
+skip$ -- 702
+stack$ -- 0
+substring$ -- 1302
+swap$ -- 122
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 546
+warning$ -- 36
+while$ -- 79
+width$ -- 0
+write$ -- 453
+(There were 36 warnings)

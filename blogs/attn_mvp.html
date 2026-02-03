@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beyond Interleaving: Causal Attention for Generative Recommenders | Hailing Cheng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2f4a;
+            --accent: #e85d04;
+            --accent-light: #faa307;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --code-bg: #f7f8fc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            line-height: 1.8;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(232, 93, 4, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(250, 163, 7, 0.04) 0%, transparent 50%),
+                linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .article-header {
+            padding: 4rem 0 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .article-badge {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .authors {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .authors strong {
+            color: var(--text);
+        }
+
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: #f0f4f8;
+            color: var(--primary);
+            padding: 0.4rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .paper-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            text-decoration: none;
+            padding: 0.85rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(232, 93, 4, 0.25);
+        }
+
+        .paper-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 93, 4, 0.35);
+        }
+
+        .paper-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        article {
+            padding: 3rem 0;
+        }
+
+        article h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        article h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.2em;
+            bottom: 0.2em;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-light));
+            border-radius: 2px;
+        }
+
+        article h2:first-child {
+            margin-top: 0;
+        }
+
+        article h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2rem 0 0.75rem;
+        }
+
+        article p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        article ul, article ol {
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+        }
+
+        article li {
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        article li strong {
+            color: var(--primary);
+        }
+
+        .highlight-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        .math-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 47, 74, 0.08);
+        }
+
+        .result-value {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .result-sublabel {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        /* Figure styles */
+        .figure {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .figure img {
+            max-width: 50%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 640px) {
+            .figure img {
+                max-width: 75%;
+            }
+        }
+
+        .figure-caption {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-style: italic;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: var(--code-bg);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(232, 93, 4, 0.03);
+        }
+
+        .improvement {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            .article-header {
+                padding: 2.5rem 0 2rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            article h2 {
+                font-size: 1.35rem;
+            }
+
+            .result-value {
+                font-size: 1.5rem;
+            }
+
+            .figure img {
+                border-radius: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="../index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Blog
+            </a>
+        </nav>
+
+        <header class="article-header">
+            <div class="article-meta">
+                <span class="article-date">KDD 2026</span>
+                <span class="article-badge">Research Paper</span>
+            </div>
+            <h1>Beyond Interleaving: Causal Attention Reformulations for Generative Recommender Systems</h1>
+            <p class="authors">
+                By <strong>Hailing Cheng</strong><br>
+                LinkedIn Inc.
+            </p>
+            <div class="article-tags">
+                <span class="tag">Generative Recommenders</span>
+                <span class="tag">Transformers</span>
+                <span class="tag">Causal Attention</span>
+                <span class="tag">Sequence Modeling</span>
+            </div>
+            <a href="../papers/attndna/attnmvp.pdf" class="paper-link" target="_blank">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Download Full Paper (PDF)
+            </a>
+        </header>
+
+        <article>
+            <h2>TL;DR</h2>
+            <p>
+                Generative recommender systems like Meta's HSTU model user behavior by <strong>interleaving item and action tokens</strong> in a sequence. While effective, this approach doubles sequence length (4× compute due to quadratic attention), introduces attention noise from heterogeneous token mixing, and obscures the true causal relationship between items and actions.
+            </p>
+            <p>
+                We propose two novel architectures—<strong>AttnLFA</strong> and <strong>AttnMVP</strong>—that explicitly encode the causal dependency that an item exposure <em>i<sub>n</sub></em> induces an action <em>a<sub>n</sub></em>. By separating item and action streams while using attention-based pooling, we achieve <strong>0.8% lower evaluation loss</strong> and <strong>23% faster training</strong> compared to interleaved baselines.
+            </p>
+
+            <h2>The Problem with Token Interleaving</h2>
+            <p>
+                Modern generative recommenders (GR) adopt Transformer architectures from LLMs and model user sequences as interleaved token streams: <code>[i₀, a₀, i₁, a₁, ..., iₙ, aₙ]</code>. While this formulation enables autoregressive prediction, it introduces several fundamental limitations.
+            </p>
+
+            <div class="figure">
+                <img src="../papers/attndna/gr_arch.png" alt="Traditional Generative Recommender Architecture" width="300" height="auto">
+                <p class="figure-caption">Figure 1: Traditional GR architecture with interleaved item and action tokens. Items and actions are concatenated before entering the Transformer stack.</p>
+            </div>
+
+            <h3>1. Semantic Heterogeneity</h3>
+            <p>
+                In natural language, tokens share a common semantic space. In recommendations, <strong>items</strong> (posts, videos, products) and <strong>actions</strong> (click, like, share) live in fundamentally different spaces. Interleaving them forces the Transformer to learn artificial alignments that don't reflect the true data-generating process.
+            </p>
+
+            <h3>2. Missing Explicit Causality</h3>
+            <p>
+                The core insight is that a user's action <em>a<sub>n</sub></em> is primarily a <strong>response to item <em>i<sub>n</sub></em></strong>, modulated by historical context. Formally:
+            </p>
+            <div class="math-block">
+                P(aₙ | iₙ, H&lt;ₙ) ≈ P(aₙ | iₙ; θ_H&lt;ₙ)
+            </div>
+            <p>
+                Standard causal self-attention treats all tokens uniformly, diluting this direct dependency across the entire sequence.
+            </p>
+
+            <h3>3. Attention Noise from Interleaving</h3>
+            <div class="highlight-box">
+                <p>
+                    <strong>The Core Issue:</strong> Once the model learns that <em>i<sub>n-1</sub></em> strongly relates to <em>a<sub>n-1</sub></em>, positional encodings (RoPE, RAB) cause the next item <em>i<sub>n</sub></em> to inherit similar attention bias toward <em>a<sub>n-1</sub></em>—regardless of semantic relevance. This creates spurious dependencies that subsequent layers must "correct."
+                </p>
+            </div>
+
+            <div class="figure">
+                <img src="../papers/attndna/toy_long_seq.jpg" alt="Toy example showing User A and User B preferences" width="1200" height="auto">
+                <p class="figure-caption">Figure 2: Toy example demonstrating contrasting user preferences. User A likes dogs and dislikes cats; User B has opposite preferences. The model must learn to associate items with their corresponding actions.</p>
+            </div>
+
+            <h3>4. Computational Overhead</h3>
+            <p>
+                Interleaving doubles sequence length from <em>N</em> to <em>2N</em>. Since self-attention is <strong>O(n²)</strong>, this translates to approximately <strong>4× computational cost</strong>—a significant burden for production systems handling billions of users.
+            </p>
+
+            <h2>Our Solution: Explicit Causal Attention</h2>
+            <p>
+                We reformulate generative recommendation as an <strong>item-conditioned action pooling</strong> problem. Instead of interleaving heterogeneous tokens, we maintain separate item and action streams and use attention as a structured pooling operator that respects causal constraints.
+            </p>
+
+            <h3>AttnLFA: Attention-based Late Fusion for Actions</h3>
+            <p>
+                The first architecture processes items through Transformer layers independently, then fuses action information at the final stage via causally-constrained attention pooling.
+            </p>
+
+            <div class="figure">
+                <img src="../papers/attndna/late_fusion.png" alt="AttnLFA Architecture" width="300" height="auto">
+                <p class="figure-caption">Figure 3: AttnLFA architecture. Item embeddings are transformed through Transformer blocks. In the final stage, action embeddings are integrated as Values via causally-constrained attention pooling.</p>
+            </div>
+
+            <p><strong>Key design decisions:</strong></p>
+            <ul>
+                <li><strong>Separate streams:</strong> Items go through N Transformer layers; actions bypass the encoder entirely</li>
+                <li><strong>Attention pooling:</strong> Final item representations serve as Q and K; action embeddings serve as V</li>
+                <li><strong>Strict causal constraint:</strong> Position <em>n</em> can only attend to positions <em>{0, ..., n-1}</em>—not itself</li>
+            </ul>
+
+            <h3>Query-Shifting for FlashAttention Compatibility</h3>
+            <p>
+                Custom attention masks aren't efficiently supported by FlashAttention kernels. We implement a <strong>query-shifting mechanism</strong>: left-shift the query sequence by one position, use standard <code>is_causal=True</code>, then zero-pad the output to restore alignment.
+            </p>
+
+            <div class="figure">
+                <img src="../papers/attndna/strict_causal.png" alt="Query-shifting mechanism for strict causal masking">
+                <p class="figure-caption">Figure 4: Query-shifting mechanism enforces strict causality while maintaining FlashAttention compatibility and GPU throughput.</p>
+            </div>
+
+            <h3>AttnMVP: Attention-based Mixed Value Pooling</h3>
+            <p>
+                While AttnLFA works well, we hypothesized that <strong>earlier integration</strong> of action signals could improve representation learning. AttnMVP mixes action information into the value stream at every Transformer layer.
+            </p>
+
+            <div class="figure">
+                <img src="../papers/attndna/AttnMVP.png" alt="AttnMVP Architecture">
+                <p class="figure-caption">Figure 5: AttnMVP architecture. At each layer, item embeddings serve as Q and K, while mixed item+action embeddings serve as V. Action signals are progressively integrated under strict causal constraints.</p>
+            </div>
+
+            <p><strong>Mathematical formulation:</strong></p>
+            <div class="math-block">
+                Q<sup>(ℓ)</sup> = K<sup>(ℓ)</sup> = H<sup>(ℓ-1)</sup><br><br>
+                V<sup>(ℓ)</sup><sub>t</sub> = H<sup>(ℓ-1)</sup><sub>t</sub> + λ · a<sub>t</sub>
+            </div>
+            <p>
+                Where <em>H<sup>(0)</sup> = {i<sub>t</sub>}</em> (item embeddings) and <em>λ ≥ 0</em> controls action contribution (we use λ=1).
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>Why This Works:</strong> Through successive layers, item representations evolve from generic content semantics ("dog" vs "cat") to <strong>user-conditioned semantics</strong> ("preferred dog" vs "disfavored cat"). Personalization emerges end-to-end from the attention mechanism—no explicit user profiling required.
+                </p>
+            </div>
+
+            <h2>Experimental Results</h2>
+            <p>
+                We evaluated on large-scale product recommendation data from LinkedIn, using sequences of up to 1024 interactions over 12 months. All models use identical hyperparameters, 12 Transformer layers, and RoPE positional encoding.
+            </p>
+
+            <h3>AttnLFA Results</h3>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-value">-0.29%</div>
+                    <div class="result-label">Eval Loss</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">-0.49%</div>
+                    <div class="result-label">Contribution NE</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">-0.47%</div>
+                    <div class="result-label">Like NE</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">-22.8%</div>
+                    <div class="result-label">Training Time</div>
+                </div>
+            </div>
+
+            <h3>AttnMVP Results</h3>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-value">-0.80%</div>
+                    <div class="result-label">Eval Loss</div>
+                    <div class="result-sublabel">2.8× better than AttnLFA</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">-1.1%</div>
+                    <div class="result-label">Contribution NE</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">-1.1%</div>
+                    <div class="result-label">Like NE</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">-12.3%</div>
+                    <div class="result-label">Training Time</div>
+                </div>
+            </div>
+
+            <h3>Comparative Analysis</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Eval Loss</th>
+                        <th>LongDwell NE</th>
+                        <th>Contribution NE</th>
+                        <th>Like NE</th>
+                        <th>Training Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Interleaved Baseline</td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td>AttnLFA</td>
+                        <td class="improvement">-0.29%</td>
+                        <td class="improvement">-0.06%</td>
+                        <td class="improvement">-0.49%</td>
+                        <td class="improvement">-0.47%</td>
+                        <td class="improvement">-22.8%</td>
+                    </tr>
+                    <tr>
+                        <td>AttnMVP</td>
+                        <td class="improvement">-0.80%</td>
+                        <td class="improvement">-0.41%</td>
+                        <td class="improvement">-1.1%</td>
+                        <td class="improvement">-1.1%</td>
+                        <td class="improvement">-12.3%</td>
+                    </tr>
+                    <tr>
+                        <td>AttnMVP - LFA</td>
+                        <td class="improvement">-0.78%</td>
+                        <td class="improvement">-0.40%</td>
+                        <td class="improvement">-1.0%</td>
+                        <td class="improvement">-1.0%</td>
+                        <td class="improvement">-13.0%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Ablation: Where Do the Gains Come From?</h3>
+            <p>
+                The <strong>AttnMVP - LFA</strong> variant (mixed-value fusion without late fusion pooling) achieves nearly identical performance to full AttnMVP. This confirms our hypothesis: <strong>early, causally constrained integration of action signals</strong> is the primary driver of improvements, not the final pooling stage.
+            </p>
+
+            <h2>Future Direction: AttnDHN (Dual-Helix Network)</h2>
+            <p>
+                We also explored a symmetric dual-stream architecture where both item and action representations are updated in parallel.
+            </p>
+
+            <div class="figure">
+                <img src="../papers/attndna/attnDNA.png" alt="AttnDHN Dual-Helix Architecture" width="400" height="auto">
+                <p class="figure-caption">Figure 6: AttnDHN architecture. Item and action embeddings are updated in alternating sequence within each Transformer layer, forming a "double-helix" information flow.</p>
+            </div>
+
+            <p>
+                <strong>Current limitations:</strong> AttnDHN doesn't consistently outperform AttnMVP due to training instability (requires halving learning rate) and the fundamental semantic heterogeneity between item space (unbounded) and action space (tens of discrete actions). However, this architecture may be promising for <strong>multimodal scenarios</strong> where both streams have more comparable semantic complexity.
+            </p>
+
+            <h2>Key Takeaways</h2>
+            <ul>
+                <li><strong>Interleaving is suboptimal:</strong> Mixing heterogeneous item and action tokens introduces attention noise and 4× computational overhead</li>
+                <li><strong>Explicit causality matters:</strong> Encoding the <em>i<sub>n</sub> → a<sub>n</sub></em> dependency directly improves both accuracy and efficiency</li>
+                <li><strong>Early fusion beats late fusion:</strong> Integrating action signals throughout Transformer layers (AttnMVP) outperforms final-layer pooling (AttnLFA)</li>
+                <li><strong>Personalization emerges:</strong> User preferences are learned implicitly through causally-constrained attention without explicit user features</li>
+                <li><strong>Production-ready:</strong> Our methods are FlashAttention-compatible and reduce training time by 12-23%</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>Bottom Line:</strong> Moving beyond token interleaving toward causality-aware attention formulations offers a principled and scalable path forward for generative recommender systems—delivering better predictions with less compute.
+                </p>
+            </div>
+        </article>
+
+        <footer>
+            <p>
+                © 2026 Hailing Cheng · <a href="../index.html">Back to Blog</a> · <a href="../papers/attndna/attnmvp.pdf" target="_blank">Download Paper</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
