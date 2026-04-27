@@ -5,3 +5,4 @@ You can view the main portfolio and the specific research blog here:
 - **[Beyond Interleaving Research Blog](https://hailingc.github.io/blogs/attn_mvp.html)**
 - **[HDET: Hyperparameter-Divergent Ensemble Training](https://hailingc.github.io/blogs/ensemble.html)**
 - **[SIREN-RoPE: Temporal and Semantic Rotary Encoding](https://hailingc.github.io/blogs/rope.html)**
+- **[Feed SR: Industrial-Scale Sequential Recommender for LinkedIn Feed](https://hailingc.github.io/blogs/ligr.html)**
