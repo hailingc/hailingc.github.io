@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIREN-RoPE: Temporal and Semantic Rotary Encoding | Hailing Cheng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2f4a;
+            --accent: #e85d04;
+            --accent-light: #faa307;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --code-bg: #f7f8fc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            line-height: 1.8;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(232, 93, 4, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(250, 163, 7, 0.04) 0%, transparent 50%),
+                linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .article-header {
+            padding: 4rem 0 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .article-badge {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .authors {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .authors strong {
+            color: var(--text);
+        }
+
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: #f0f4f8;
+            color: var(--primary);
+            padding: 0.4rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .paper-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .paper-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            text-decoration: none;
+            padding: 0.85rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(232, 93, 4, 0.25);
+        }
+
+        .paper-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 93, 4, 0.35);
+        }
+
+        .paper-link.secondary {
+            background: white;
+            color: var(--primary);
+            border: 1.5px solid var(--border);
+            box-shadow: none;
+        }
+
+        .paper-link.secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 15px rgba(232, 93, 4, 0.1);
+        }
+
+        .paper-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        article {
+            padding: 3rem 0;
+        }
+
+        article h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        article h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.2em;
+            bottom: 0.2em;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-light));
+            border-radius: 2px;
+        }
+
+        article h2:first-child {
+            margin-top: 0;
+        }
+
+        article h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2rem 0 0.75rem;
+        }
+
+        article p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        article ul, article ol {
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+        }
+
+        article li {
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        article li strong {
+            color: var(--primary);
+        }
+
+        .highlight-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        .math-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 47, 74, 0.08);
+        }
+
+        .result-value {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .result-sublabel {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .figure {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .figure img {
+            max-width: 70%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .figure img.narrow {
+            max-width: 45%;
+        }
+
+        @media (max-width: 640px) {
+            .figure img {
+                max-width: 100%;
+            }
+            .figure img.narrow {
+                max-width: 80%;
+            }
+        }
+
+        .figure-caption {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-style: italic;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.93rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: var(--code-bg);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(232, 93, 4, 0.03);
+        }
+
+        .improvement {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .best {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            .article-header {
+                padding: 2.5rem 0 2rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            article h2 {
+                font-size: 1.35rem;
+            }
+
+            .result-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="../index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Blog
+            </a>
+        </nav>
+
+        <header class="article-header">
+            <div class="article-meta">
+                <span class="article-date">NeurIPS 2026</span>
+                <span class="article-badge">Research Paper</span>
+            </div>
+            <h1>Learning to Rotate: Temporal and Semantic Rotary Encoding for Sequential Modeling</h1>
+            <p class="authors">
+                By <strong>Hailing Cheng</strong>, Daqi Sun, Xinyu Lu<br>
+                LinkedIn Inc.
+            </p>
+            <div class="article-tags">
+                <span class="tag">Positional Encoding</span>
+                <span class="tag">RoPE</span>
+                <span class="tag">Sequential Recommendation</span>
+                <span class="tag">Transformers</span>
+                <span class="tag">Temporal Modeling</span>
+            </div>
+            <div class="paper-links">
+                <a href="../papers/rope/rope.pdf" class="paper-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    Download Paper (PDF)
+                </a>
+                <a href="https://github.com/hailingc/siren_rope" class="paper-link secondary" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    Code on GitHub
+                </a>
+            </div>
+        </header>
+
+        <article>
+            <h2>TL;DR</h2>
+            <p>
+                Every Transformer dedicates enormous capacity to learning rich <strong>semantic embeddings</strong>—yet the rotation manifold acted upon by Rotary Positional Embeddings (RoPE) has always been treated as a fixed, hand-crafted structure populated only by discrete ordinal indices. We argue this <em>rotation space</em> is a largely overlooked second dimension of expressivity in attention.
+            </p>
+            <p>
+                We introduce <strong>SIREN-RoPE</strong>, which populates this rotation dimension with heterogeneous temporal signals—continuous timestamps, cyclical daily/weekly patterns, and learned frequency scales—via a dual-branch Sinusoidal Representation Network (SIREN). On a production-scale social feed dataset, SIREN-RoPE consistently improves calibration (NE) and ranking (AUC) across three engagement tasks with <strong>~0.2% extra parameters</strong> and negligible computational overhead.
+            </p>
+
+            <h2>A New Algebraic Analogy</h2>
+            <p>
+                The analogy to complex numbers is instructive: just as introducing the imaginary axis—orthogonal to and independent of the real line—unlocked new algebraic structure once believed impossible, treating the RoPE rotation manifold as a learnable, signal-conditioned space opens an <strong>orthogonal degree of freedom in attention</strong>.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>The Two Dimensions of Attention:</strong><br>
+                    Token embedding → encodes the <em>semantic (real) component</em> — <strong>what</strong> a token means<br>
+                    Rotation angle → encodes the <em>dynamic (imaginary) component</em> — <strong>how</strong> it relates to every other token across time, position, and context
+                </p>
+            </div>
+
+            <p>
+                In social-feed recommendation, treating ordinal position as a proxy for time is fundamentally misaligned with empirical user behavior. An interaction at 08:00 on a Monday is qualitatively different from one at 22:00 on a Saturday, even when they share the same ordinal displacement |p_i − p_j|. Human behavior is governed by strong periodicities—24-hour diurnal cycles and 7-day weekly rhythms—that ordinal indices cannot capture.
+            </p>
+
+            <h2>SIREN-RoPE: The Unified Rotation Formula</h2>
+            <p>
+                SIREN-RoPE replaces the fixed RoPE angle p·θ_j with a learned combination of temporal and ordinal signals:
+            </p>
+
+            <div class="math-block">
+                Θ<sub>j</sub>(T<sub>i</sub>, p<sub>i</sub>) = f<sub>φ</sub>(T<sub>i</sub>)<sub>j</sub> · ω<sup>s</sup><sub>j</sub> + p<sub>i</sub> · θ<sub>j</sub> · λ<br><br>
+                ← Temporal (SIREN) ——————— Ordinal (scaled) →
+            </div>
+
+            <p>
+                Where <code>f_φ</code> is the dual-branch SIREN network mapping timestamp features to rotation angles, <code>ω<sup>s</sup><sub>j</sub></code> are learnable per-dimension frequency scalings, and <code>λ</code> is a learnable scalar gate controlling the ordinal contribution (initialized to 1.0).
+            </p>
+
+            <p>
+                A striking emergent behavior: without temporal signals, <code>λ</code> remains near 1.0 throughout training. Upon introducing SIREN-RoPE, <code>λ</code> drops to <strong>0.044 at convergence</strong>, indicating the model has learned to rely predominantly on temporal modulation—the rotation dimension, once given a rich temporal signal, largely supplants the need for discrete ordinal recency.
+            </p>
+
+            <h2>Architecture: Dual-Branch SIREN</h2>
+
+            <div class="figure">
+                <img src="../papers/rope/model_arch.png" alt="SIREN-RoPE model architecture" class="narrow">
+                <p class="figure-caption">Figure 1: Base model architecture (AttnMVP). Item and action embeddings are maintained as separate streams. SIREN-RoPE replaces the fixed ordinal rotation angle with a learned combination of temporal and ordinal signals injected directly into the query-key rotation geometry.</p>
+            </div>
+
+            <p>
+                The network f_φ additively combines two branches:
+            </p>
+            <ul>
+                <li><strong>Periodic branch (SIREN):</strong> Uses sine activations sin(ω₀·Wx + b) to autonomously discover temporal periodicities beyond the manually specified daily/weekly cycles. Designed to handle unknown harmonics in user behavior.</li>
+                <li><strong>Aperiodic branch (DNN):</strong> Uses standard ReLU activations to capture monotone trends such as content-recency decay. When the input features are themselves cyclical (cos/sin pairs), this branch retains flexibility to model periodic components as well.</li>
+            </ul>
+
+            <h2>Temporal Input Features</h2>
+            <p>
+                The input to f_φ is a 5-dimensional decomposition of the raw Unix timestamp T:
+            </p>
+
+            <div class="math-block">
+                t(T) = [cos(2πT/τ<sub>d</sub>), sin(2πT/τ<sub>d</sub>), cos(2πT/τ<sub>w</sub>), sin(2πT/τ<sub>w</sub>), T̃]
+            </div>
+
+            <p>
+                where τ<sub>d</sub> = 86,400 s (daily) and τ<sub>w</sub> = 604,800 s (weekly). Representing each cycle as a (cos, sin) pair ensures continuity across period boundaries (midnight, end of week) and avoids phase-discontinuity artifacts. Notably, the model need not know the user's timezone to capture morning or evening patterns—the periodicity is recovered automatically from the behavioral sequence.
+            </p>
+
+            <h2>Experiments</h2>
+            <p>
+                All four models share the identical AttnMVP backbone, feature set, and training procedure (12 Transformer layers, d=512 hidden dimensions, 4 attention heads, sequence length C=1024). The <em>only</em> controlled variable is how—or whether—the item timestamp is used.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Timestamp in Features</th>
+                        <th>Timestamp in Rotation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ordinal RoPE (production baseline)</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                    </tr>
+                    <tr>
+                        <td>Timestamp-as-Feature</td>
+                        <td>✓</td>
+                        <td>✗</td>
+                    </tr>
+                    <tr>
+                        <td>TO-RoPE</td>
+                        <td>✗</td>
+                        <td>time-domain inverse frequencies</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SIREN-RoPE (ours)</strong></td>
+                        <td>✗</td>
+                        <td>dual-branch SIREN</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Main Results</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Contribution NE↓</th>
+                        <th>Contribution AUC↑</th>
+                        <th>Like NE↓</th>
+                        <th>Like AUC↑</th>
+                        <th>LongDwell NE↓</th>
+                        <th>LongDwell AUC↑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ordinal RoPE</td>
+                        <td>0.6206</td>
+                        <td>0.9102</td>
+                        <td>0.5985</td>
+                        <td>0.9238</td>
+                        <td>0.8362</td>
+                        <td>0.7597</td>
+                    </tr>
+                    <tr>
+                        <td>Timestamp-as-Feature</td>
+                        <td>0.6218</td>
+                        <td>0.9098</td>
+                        <td>0.5997</td>
+                        <td>0.9233</td>
+                        <td>0.8350</td>
+                        <td>0.7603</td>
+                    </tr>
+                    <tr>
+                        <td>TO-RoPE</td>
+                        <td>0.6218</td>
+                        <td>0.9095</td>
+                        <td>0.5999</td>
+                        <td>0.9231</td>
+                        <td>0.8349</td>
+                        <td>0.7613</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SIREN-RoPE (ours)</strong></td>
+                        <td class="improvement"><strong>0.6182</strong></td>
+                        <td class="improvement"><strong>0.9115</strong></td>
+                        <td class="improvement"><strong>0.5963</strong></td>
+                        <td class="improvement"><strong>0.9249</strong></td>
+                        <td class="improvement"><strong>0.8334</strong></td>
+                        <td class="improvement"><strong>0.7633</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-value">−0.39%</div>
+                    <div class="result-label">Contribution NE</div>
+                    <div class="result-sublabel">0.6206 → 0.6182</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">+0.36%</div>
+                    <div class="result-label">LongDwell AUC</div>
+                    <div class="result-sublabel">0.7597 → 0.7633</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">+0.11%</div>
+                    <div class="result-label">Like AUC</div>
+                    <div class="result-sublabel">0.9238 → 0.9249</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">0.2%</div>
+                    <div class="result-label">Extra Parameters</div>
+                    <div class="result-sublabel">~1.4% training overhead</div>
+                </div>
+            </div>
+
+            <h2>What the Baselines Reveal</h2>
+
+            <h3>Routing Timestamp Through Embeddings Doesn't Help</h3>
+            <p>
+                <strong>Timestamp-as-Feature</strong>—which appends the timestamp to item sequence features while leaving the rotation angle purely ordinal—performs <em>no better</em> than Ordinal RoPE on any metric, and is slightly worse on calibration. This confirms that temporal signals routed through the embedding dimension fail to help and can interfere with content semantics.
+            </p>
+
+            <h3>Fixed Time Frequencies in Rotation Are Insufficient</h3>
+            <p>
+                <strong>TO-RoPE</strong>—which applies RoPE-style inverse frequencies to the timestamp rather than ordinal position—only slightly improves over Ordinal RoPE on LongDwell, confirming that a fixed frequency schedule cannot capture the complex multi-scale periodicities that SIREN discovers autonomously.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>Key Insight:</strong> Temporal signals that fail when injected into the semantic (embedding) dimension consistently succeed when injected into the rotation dimension. The rotation manifold is a qualitatively distinct representation mode—not redundant with but orthogonal to the embedding space.
+                </p>
+            </div>
+
+            <h2>Ablation Studies</h2>
+
+            <h3>Cyclical Features Improve Calibration</h3>
+            <p>
+                Replacing the scalar <code>time_in_year</code> with the full five-dimensional (cos, sin) decomposition consistently improves NE. The (cos, sin) representation maps each cycle onto a unit circle, eliminating the discontinuous jump that a raw scalar imposes on the network (e.g., 86,399 s jumping back to 0 at midnight).
+            </p>
+
+            <h3>SIREN Branch: Valuable for Hidden Periodicities</h3>
+            <p>
+                When cyclical features are already provided, DNN-only with full temporal inputs achieves the best NE. We retain the SIREN branch not for the known daily/weekly cycles, but for its capacity to <strong>autonomously discover hidden periodicities</strong> absent from the manual feature decomposition.
+            </p>
+
+            <h3>Static Signals Belong in Embeddings, Not Rotation</h3>
+            <p>
+                Replacing the temporal input with a binary in/out-of-network feature (a static social-graph property) performs no better than ordinal RoPE. A static property that does not change across time or position offers no advantage in the dynamic rotation dimension. The rotation dimension is most productive with signals that are inherently <strong>relational and dynamic</strong>.
+            </p>
+
+            <div class="figure">
+                <img src="../papers/rope/attn_heatmap.png" alt="Attention heatmap showing temporal patterns">
+                <p class="figure-caption">Figure 2: Attention heatmap comparing Ordinal RoPE vs. SIREN-RoPE. SIREN-RoPE develops richer temporal attention patterns that reflect daily and weekly behavioral cycles, with attention weights that vary meaningfully with time-of-day and day-of-week context.</p>
+            </div>
+
+            <h2>Discussion: Rotation as an Expressive Dimension</h2>
+            <p>
+                Our results suggest the rotation manifold is a structured expressive channel rather than a mere positional scaffold. Much like the imaginary axis in algebra, a learnable rotation dimension provides an orthogonal space to encode relationships invisible to the embedding space alone.
+            </p>
+            <p>
+                The stability of the learnable gate λ demonstrates that ordinal recency and absolute temporal signals are complementary. This framework extends beyond recommendation to general sequence modeling: in NLP, the rotary angle could be conditioned on syntactic depth or part-of-speech tags. Such "content-aware" positional geometry allows the attention mechanism to modulate similarity based on structural or semantic context rather than simple proximity.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>Open Invitation:</strong> We invite the community to view the rotation space not as a solved positional-encoding detail, but as an untapped axis whose rich structure may prove as consequential for attention as the imaginary unit proved for algebra. Candidates for rotation-dimension conditioning include syntactic structure in NLP, semantic category in vision, and audio frequency bands in speech.
+                </p>
+            </div>
+        </article>
+
+        <footer>
+            <p>© 2026 Hailing Cheng · Hosted on <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>

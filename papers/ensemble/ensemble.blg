@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: ensemble.aux
+The style file: abbrvnat.bst
+Database file #1: base.bib
+Warning--can't use both volume and number fields in li2020pytorch
+You've used 28 entries,
+            2773 wiz_defined-function locations,
+            723 strings with 10035 characters,
+and the built_in function-call counts, 15678 in all, are:
+= -- 1269
+> -- 1228
+< -- 23
++ -- 412
+- -- 384
+* -- 1292
+:= -- 2407
+add.period$ -- 85
+call.type$ -- 28
+change.case$ -- 208
+chr.to.int$ -- 28
+cite$ -- 57
+duplicate$ -- 682
+empty$ -- 1141
+format.name$ -- 426
+if$ -- 3283
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 27
+newline$ -- 148
+num.names$ -- 112
+pop$ -- 474
+preamble$ -- 1
+purify$ -- 180
+quote$ -- 0
+skip$ -- 577
+stack$ -- 0
+substring$ -- 301
+swap$ -- 117
+text.length$ -- 14
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 308
+warning$ -- 1
+while$ -- 103
+width$ -- 0
+write$ -- 360
+(There was 1 warning)

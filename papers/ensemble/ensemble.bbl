@@ -1,0 +1,193 @@
+\begin{thebibliography}{28}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Baydin et~al.(2018)Baydin, Cornish, Rubio, Schmidt, and
+  Wood]{baydin2018hypergradient}
+A.~G. Baydin, R.~Cornish, D.~M. Rubio, M.~Schmidt, and F.~Wood.
+\newblock Online learning rate adaptation with hypergradient descent.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2018.
+
+\bibitem[Blier et~al.(2019)Blier, Wolinski, and Ollivier]{blier2019learning}
+L.~Blier, P.~Wolinski, and Y.~Ollivier.
+\newblock Learning with random learning rates.
+\newblock \emph{arXiv preprint arXiv:1810.01322}, 2019.
+
+\bibitem[Cheng(2026)]{cheng2026}
+H.~Cheng.
+\newblock Beyond interleaving: Causal attention reformulations for generative
+  recommender systems, 2026.
+\newblock URL \url{https://arxiv.org/abs/2603.10369}.
+
+\bibitem[Defazio and Mishchenko(2023)]{defazio2023learning}
+A.~Defazio and K.~Mishchenko.
+\newblock Learning-rate-free learning by {D}-adaptation.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, 2023.
+
+\bibitem[Defazio et~al.(2024)Defazio, Yang, Mehta, Mishchenko, Khaled, and
+  Cutkosky]{defazio2024road}
+A.~Defazio, X.~A. Yang, H.~Mehta, K.~Mishchenko, A.~Khaled, and A.~Cutkosky.
+\newblock The road less scheduled.
+\newblock \emph{arXiv preprint arXiv:2405.15682}, 2024.
+
+\bibitem[Dimlioglu and Choromanska(2024)]{dimlioglu2024grawa}
+T.~Dimlioglu and A.~Choromanska.
+\newblock {GRAWA}: Gradient-based weighted averaging for distributed training
+  of deep learning models.
+\newblock \emph{arXiv preprint arXiv:2403.04206}, 2024.
+
+\bibitem[Douillard et~al.(2023)Douillard, Feng, Rusu, Chhaparia, Donchev,
+  Kuncoro, Szegedy, Sessa, Galashov, and Cemgil]{douillard2023diloco}
+A.~Douillard, Q.~Feng, A.~A. Rusu, R.~Chhaparia, Y.~Donchev, A.~Kuncoro,
+  M.~Szegedy, A.~Sessa, A.~Galashov, and A.~T. Cemgil.
+\newblock {DiLoCo}: Distributed low-communication training of language models.
+\newblock \emph{arXiv preprint arXiv:2311.08105}, 2023.
+
+\bibitem[Fort et~al.(2019)Fort, Hu, and Lakshminarayanan]{fort2019deep}
+S.~Fort, H.~Hu, and B.~Lakshminarayanan.
+\newblock Deep ensembles: A loss landscape perspective.
+\newblock In \emph{arXiv preprint arXiv:1912.02757}, 2019.
+
+\bibitem[Gupta et~al.(2020)Gupta, Serrano, and DeCoste]{gupta2020stochastic}
+V.~Gupta, S.~A. Serrano, and D.~DeCoste.
+\newblock Stochastic weight averaging in parallel: Large-batch training that
+  generalizes well.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2020.
+
+\bibitem[Haddadpour et~al.(2019)Haddadpour, Kamani, Mahdavi, and
+  Cadambe]{haddadpour2019local}
+F.~Haddadpour, M.~M. Kamani, M.~Mahdavi, and V.~R. Cadambe.
+\newblock Local {SGD} with periodic averaging: Tighter analysis and adaptive
+  synchronization.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~32, 2019.
+
+\bibitem[Ho et~al.(2020)Ho, Jain, and Abbeel]{ho2020denoising}
+J.~Ho, A.~Jain, and P.~Abbeel.
+\newblock Denoising diffusion probabilistic models.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~33, pages 6840--6851, 2020.
+
+\bibitem[Howard and Ruder(2018)]{howard2018universal}
+J.~Howard and S.~Ruder.
+\newblock Universal language model fine-tuning for text classification.
+\newblock In \emph{Proceedings of the 56th Annual Meeting of the Association
+  for Computational Linguistics (ACL)}, pages 328--339, 2018.
+
+\bibitem[Ivgi et~al.(2023)Ivgi, Hinder, and Carmon]{ivgi2023dog}
+M.~Ivgi, O.~Hinder, and Y.~Carmon.
+\newblock {DoG} is {SGD}'s best friend: A parameter-free dynamic step size
+  schedule.
+\newblock \emph{arXiv preprint arXiv:2302.12022}, 2023.
+
+\bibitem[Izmailov et~al.(2018)Izmailov, Podoprikhin, Garipov, Vetrov, and
+  Wilson]{izmailov2018averaging}
+P.~Izmailov, D.~Podoprikhin, T.~Garipov, D.~Vetrov, and A.~G. Wilson.
+\newblock Averaging weights leads to wider optima and better generalization.
+\newblock In \emph{Uncertainty in Artificial Intelligence (UAI)}, 2018.
+
+\bibitem[Jaderberg et~al.(2017)Jaderberg, Dalibard, Osindero, Czarnecki,
+  Donahue, Razavi, Vinyals, Green, Dunning, Simonyan,
+  et~al.]{jaderberg2017population}
+M.~Jaderberg, V.~Dalibard, S.~Osindero, W.~M. Czarnecki, J.~Donahue, A.~Razavi,
+  O.~Vinyals, T.~Green, I.~Dunning, K.~Simonyan, et~al.
+\newblock Population based training of neural networks.
+\newblock In \emph{arXiv preprint arXiv:1711.09846}, 2017.
+
+\bibitem[Kingma and Ba(2014)]{kingma2014adam}
+D.~P. Kingma and J.~Ba.
+\newblock Adam: A method for stochastic optimization.
+\newblock \emph{arXiv preprint arXiv:1412.6980}, 2014.
+
+\bibitem[Lakshminarayanan et~al.(2017)Lakshminarayanan, Pritzel, and
+  Blundell]{lakshminarayanan2017simple}
+B.~Lakshminarayanan, A.~Pritzel, and C.~Blundell.
+\newblock Simple and scalable predictive uncertainty estimation using deep
+  ensembles.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~30, 2017.
+
+\bibitem[Li et~al.(2020)Li, Zhao, Varma, Salpekar, Noordhuis, Li, Paszke,
+  Smith, Vaughan, Damania, et~al.]{li2020pytorch}
+S.~Li, Y.~Zhao, R.~Varma, O.~Salpekar, P.~Noordhuis, T.~Li, A.~Paszke,
+  J.~Smith, B.~Vaughan, P.~Damania, et~al.
+\newblock Py{T}orch distributed: Experiences on accelerating data parallel
+  training.
+\newblock In \emph{Proceedings of the VLDB Endowment}, volume~13, pages
+  3005--3018, 2020.
+
+\bibitem[Loshchilov and Hutter(2017)]{loshchilov2017sgdr}
+I.~Loshchilov and F.~Hutter.
+\newblock {SGDR}: Stochastic gradient descent with warm restarts.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2017.
+
+\bibitem[Paszke et~al.(2019)Paszke, Gross, Massa, Lerer, Bradbury, Chanan,
+  Killeen, Lin, Gimelshein, Antiga, et~al.]{paszke2019pytorch}
+A.~Paszke, S.~Gross, F.~Massa, A.~Lerer, J.~Bradbury, G.~Chanan, T.~Killeen,
+  Z.~Lin, N.~Gimelshein, L.~Antiga, et~al.
+\newblock Py{T}orch: An imperative style, high-performance deep learning
+  library.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~32, 2019.
+
+\bibitem[Rolinek and Martius(2018)]{rolinek2018l4}
+M.~Rolinek and G.~Martius.
+\newblock {L4}: Practical loss-based stepsize adaptation for deep learning.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~31, 2018.
+
+\bibitem[Salimans et~al.(2017)Salimans, Ho, Chen, Sidor, and
+  Sutskever]{salimans2017evolution}
+T.~Salimans, J.~Ho, X.~Chen, S.~Sidor, and I.~Sutskever.
+\newblock Evolution strategies as a scalable alternative to reinforcement
+  learning.
+\newblock \emph{arXiv preprint arXiv:1703.03864}, 2017.
+
+\bibitem[Smith(2017)]{smith2017cyclical}
+L.~N. Smith.
+\newblock Cyclical learning rates for training neural networks.
+\newblock In \emph{2017 IEEE Winter Conference on Applications of Computer
+  Vision (WACV)}, pages 464--472. IEEE, 2017.
+
+\bibitem[Smith and Topin(2019)]{smith2019super}
+L.~N. Smith and N.~Topin.
+\newblock Super-convergence: Very fast training of neural networks using large
+  learning rates.
+\newblock \emph{Proceedings of SPIE}, 11006:\penalty0 1100612, 2019.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017attention}
+A.~Vaswani, N.~Shazeer, N.~Parmar, J.~Uszkoreit, L.~Jones, A.~N. Gomez,
+  {\L}.~Kaiser, and I.~Polosukhin.
+\newblock Attention is all you need.
+\newblock \emph{Advances in neural information processing systems}, 30, 2017.
+
+\bibitem[Wierstra et~al.(2014)Wierstra, Forster, Peters, and
+  Schmidhuber]{wierstra2014natural}
+D.~Wierstra, T.~Forster, J.~Peters, and J.~Schmidhuber.
+\newblock Natural evolution strategies.
+\newblock In \emph{Journal of Machine Learning Research}, volume~15, pages
+  949--980, 2014.
+
+\bibitem[Wortsman et~al.(2022)Wortsman, Ilharco, Gadre, Roelofs, Gontijo-Lopes,
+  Morcos, Namkoong, Farhadi, Carlin, Kornblith, et~al.]{wortsman2022model}
+M.~Wortsman, G.~Ilharco, S.~Y. Gadre, R.~Roelofs, R.~Gontijo-Lopes, A.~S.
+  Morcos, H.~Namkoong, A.~Farhadi, Y.~Carlin, S.~Kornblith, et~al.
+\newblock Model soups: averaging weights of multiple fine-tuned models improves
+  accuracy without increasing inference time.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, pages
+  23965--23998, 2022.
+
+\bibitem[Zhang et~al.(2015)Zhang, Choromanska, and LeCun]{zhang2015easgd}
+S.~Zhang, A.~E. Choromanska, and Y.~LeCun.
+\newblock Deep learning with elastic averaging {SGD}.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~28, 2015.
+
+\end{thebibliography}

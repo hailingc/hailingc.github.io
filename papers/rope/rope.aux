@@ -1,0 +1,129 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{sitzmann2020siren}
+\citation{su2024roformer}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\citation{vaswani2017attention}
+\citation{shaw2018relative,dai2019transformerxl,raffel2020t5}
+\citation{su2024roformer}
+\citation{peng2023yarn,zhang2024longrope}
+\citation{kazemi2019time2vec}
+\citation{li2020tisasrec}
+\citation{he2020deberta}
+\citation{ke2020tupe}
+\citation{shirkavand2025torope}
+\citation{sitzmann2020siren}
+\citation{tancik2020fourier}
+\citation{fons2022hypertime,lenaour2024inrts}
+\citation{chen2018neuralode,kidger2020neuralcde}
+\citation{chen2024contiformer}
+\citation{su2024roformer}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Contributions}{2}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Positional Encodings and RoPE.}{2}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Temporal Dynamics in Sequential Models.}{2}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Implicit Neural Representations and Continuous-Time Models.}{2}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}SIREN-RoPE: Unified Rotary Encoding}{2}{section.3}\protected@file@percent }
+\newlabel{sec:method}{{3}{2}{SIREN-RoPE: Unified Rotary Encoding}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Problem Formulation}{2}{subsection.3.1}\protected@file@percent }
+\citation{sitzmann2020siren}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Ordinal-Temporal Fusion}{3}{subsection.3.2}\protected@file@percent }
+\newlabel{eq:siren_rope}{{1}{3}{Ordinal-Temporal Fusion}{equation.1}{}}
+\newlabel{eq:rot_cos}{{2}{3}{Ordinal-Temporal Fusion}{equation.2}{}}
+\newlabel{eq:rot_sin}{{3}{3}{Ordinal-Temporal Fusion}{equation.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Initialization and convergence.}{3}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Dual-Branch SIREN Architecture}{3}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:siren_arch}{{3.3}{3}{Dual-Branch SIREN Architecture}{subsection.3.3}{}}
+\newlabel{eq:dual_branch}{{4}{3}{Dual-Branch SIREN Architecture}{equation.4}{}}
+\citation{cheng2026}
+\citation{shirkavand2025torope}
+\citation{cheng2026}
+\citation{zhai2024actions}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Temporal Input Features}{4}{subsection.3.4}\protected@file@percent }
+\newlabel{eq:temp_feat}{{5}{4}{Temporal Input Features}{equation.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experiments}{4}{section.4}\protected@file@percent }
+\newlabel{sec:experiments}{{4}{4}{Experiments}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experimental Setup}{4}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Dataset.}{4}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Baselines.}{4}{section*.6}\protected@file@percent }
+\citation{cheng2026}
+\citation{cheng2026}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Base model architecture (AttnMVP, \citet  {cheng2026}). Item and action embeddings are maintained as separate streams. Item embeddings form the Query/Key projections in every Transformer layer while action embeddings are mixed into the Value stream under strict causal masking. A final action-pooling step aggregates historical action signals conditioned on item-level similarity before the prediction head.}}{5}{figure.1}\protected@file@percent }
+\newlabel{fig:model_arch}{{1}{5}{Base model architecture (AttnMVP, \citet {cheng2026}). Item and action embeddings are maintained as separate streams. Item embeddings form the Query/Key projections in every Transformer layer while action embeddings are mixed into the Value stream under strict causal masking. A final action-pooling step aggregates historical action signals conditioned on item-level similarity before the prediction head}{figure.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Base Model Architecture.}{5}{section*.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces How each model incorporates the item timestamp. All other components (backbone, features, training) are identical.}}{5}{table.1}\protected@file@percent }
+\newlabel{tab:model_comparison}{{1}{5}{How each model incorporates the item timestamp. All other components (backbone, features, training) are identical}{table.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Implementation details.}{5}{section*.8}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Engagement prediction on the production social feed dataset. NE: lower is better; AUC: higher is better. Best results are \textbf  {bolded}; second-best is \underline  {underlined}.}}{6}{table.2}\protected@file@percent }
+\newlabel{tab:main}{{2}{6}{Engagement prediction on the production social feed dataset. NE: lower is better; AUC: higher is better. Best results are \textbf {bolded}; second-best is \underline {underlined}}{table.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Evaluation metrics.}{6}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Main Results}{6}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Ablation Study}{6}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{(1)~Cyclical features improve calibration.}{6}{section*.10}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Ablation study on the production social feed dataset across all six metric--task combinations. NE: lower is better; AUC: higher is better. Best per column in \textbf  {bold}; second-best \underline  {underlined}. Groups separated by horizontal rules.}}{7}{table.3}\protected@file@percent }
+\newlabel{tab:ablation}{{3}{7}{Ablation study on the production social feed dataset across all six metric--task combinations. NE: lower is better; AUC: higher is better. Best per column in \textbf {bold}; second-best \underline {underlined}. Groups separated by horizontal rules}{table.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{(2)~SIREN branch: useful for undiscovered periodicities.}{7}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{(3)~Semantic rotation: static signals belong in embeddings.}{7}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Efficiency analysis.}{7}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Discussion}{7}{section.5}\protected@file@percent }
+\newlabel{sec:discussion}{{5}{7}{Discussion}{section.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Rotation as an expressive dimension.}{7}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Complementarity and Generalization.}{7}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion and Future Work}{7}{section.6}\protected@file@percent }
+\newlabel{sec:conclusion}{{6}{7}{Conclusion and Future Work}{section.6}{}}
+\bibstyle{abbrvnat}
+\bibdata{base}
+\bibcite{chen2018neuralode}{{1}{2018}{{Chen et~al.}}{{Chen, Rubanova, Bettencourt, and Duvenaud}}}
+\bibcite{chen2023pi}{{2}{2023}{{Chen et~al.}}{{Chen, Wong, Chen, and Tian}}}
+\bibcite{chen2024contiformer}{{3}{2024}{{Chen et~al.}}{{Chen, Ren, Wang, Fang, Sun, and Li}}}
+\bibcite{cheng2026}{{4}{2026}{{Cheng}}{{}}}
+\bibcite{dai2019transformerxl}{{5}{2019}{{Dai et~al.}}{{Dai, Yang, Yang, Carbonell, Le, and Salakhutdinov}}}
+\bibcite{zhang2024longrope}{{6}{2024}{{Ding et~al.}}{{Ding, Zhang, Zhang, Xu, Shang, Xu, Yang, and Yang}}}
+\@writefile{toc}{\contentsline {paragraph}{Future work.}{8}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Broader Impact Statement}{8}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Positive impacts.}{8}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Potential negative impacts.}{8}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Limitations}{8}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Extrapolation constraints.}{8}{section*.19}\protected@file@percent }
+\bibcite{fons2022hypertime}{{7}{2022}{{Fons et~al.}}{{Fons, Ruiz, Willetts, and Mayol-Cuevas}}}
+\bibcite{he2020deberta}{{8}{2021}{{He et~al.}}{{He, Liu, Gao, and Chen}}}
+\bibcite{kazemi2019time2vec}{{9}{2019}{{Kazemi et~al.}}{{Kazemi, Goel, Jain, Kobyzev, Sethi, Forsyth, and Poupart}}}
+\bibcite{ke2020tupe}{{10}{2021}{{Ke et~al.}}{{Ke, He, and Liu}}}
+\bibcite{kidger2020neuralcde}{{11}{2020}{{Kidger et~al.}}{{Kidger, Morrill, Foster, and Lyons}}}
+\bibcite{lenaour2024inrts}{{12}{2024}{{Le~Naour et~al.}}{{Le~Naour, Serrano, Migus, Yin, Agoua, Baskiotis, Gallinari, and Cord}}}
+\bibcite{li2020tisasrec}{{13}{2020}{{Li et~al.}}{{Li, Wang, and McAuley}}}
+\bibcite{peng2023yarn}{{14}{2023}{{Peng et~al.}}{{Peng, Quesnelle, Fan, and Shippole}}}
+\bibcite{raffel2020t5}{{15}{2020}{{Raffel et~al.}}{{Raffel, Shazeer, Roberts, Lee, Narang, Matena, Zhou, Li, and Liu}}}
+\bibcite{shaw2018relative}{{16}{2018}{{Shaw et~al.}}{{Shaw, Uszkoreit, and Vaswani}}}
+\bibcite{sitzmann2020siren}{{17}{2020}{{Sitzmann et~al.}}{{Sitzmann, Martel, Bergman, Lindell, and Wetzstein}}}
+\bibcite{su2024roformer}{{18}{2024}{{Su et~al.}}{{Su, Ahmed, Lu, Pan, Bo, and Liu}}}
+\bibcite{tancik2020fourier}{{19}{2020}{{Tancik et~al.}}{{Tancik, Srinivasan, Mildenhall, Fridovich-Keil, Raghavan, Singhal, Ramamoorthi, Barron, and Ng}}}
+\bibcite{vaswani2017attention}{{20}{2017}{{Vaswani et~al.}}{{Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, and Polosukhin}}}
+\bibcite{shirkavand2025torope}{{21}{2025}{{Wei et~al.}}{{Wei, Wu, Yi, Shirkavand, and Gong}}}
+\bibcite{zhai2024actions}{{22}{2024}{{Zhai et~al.}}{{Zhai, Liao, Liu, Wang, Li, Cao, Gao, Gong, Gu, He, Lu, and Shi}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Attention Modulation of Ordinal RoPE}{9}{appendix.A}\protected@file@percent }
+\newlabel{sec:rope_analysis}{{A}{9}{Attention Modulation of Ordinal RoPE}{appendix.A}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Attention score between a query at position 0 and keys at ordinal positions 0--1023, computed with a 512-dimensional unit vector ($\mathbf  {q} = \mathbf  {k} = \mathbf  {1}/\sqrt  {512}$) under four RoPE bases ($10^4$, $10^5$, $10^6$, $10^7$). All bases produce a monotone global decay with small high-frequency oscillations whose period grows with the base.}}{10}{figure.2}\protected@file@percent }
+\newlabel{fig:rope_analysis}{{2}{10}{Attention score between a query at position 0 and keys at ordinal positions 0--1023, computed with a 512-dimensional unit vector ($\mathbf {q} = \mathbf {k} = \mathbf {1}/\sqrt {512}$) under four RoPE bases ($10^4$, $10^5$, $10^6$, $10^7$). All bases produce a monotone global decay with small high-frequency oscillations whose period grows with the base}{figure.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Global recency decay.}{10}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{High-frequency oscillations without semantic meaning.}{10}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Ordinal RoPE as a regularizer.}{10}{section*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Base sensitivity in production.}{10}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}SIREN-RoPE Temporal Attention Sweep}{10}{appendix.B}\protected@file@percent }
+\newlabel{sec:time_sweep}{{B}{10}{SIREN-RoPE Temporal Attention Sweep}{appendix.B}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Attention score of a SIREN-RoPE module (weights extracted from the production model) as the key timestamp is swept across four time spans, using a 128-dimensional unit vector for both query and key. Each panel overlaps two consecutive periods (day 1 vs.\ day 2; week 1 vs.\ week 2; month 1 vs.\ month 2; year 1 vs.\ year 2) to reveal repeating structure.}}{11}{figure.3}\protected@file@percent }
+\newlabel{fig:sweep_time}{{3}{11}{Attention score of a SIREN-RoPE module (weights extracted from the production model) as the key timestamp is swept across four time spans, using a 128-dimensional unit vector for both query and key. Each panel overlaps two consecutive periods (day 1 vs.\ day 2; week 1 vs.\ week 2; month 1 vs.\ month 2; year 1 vs.\ year 2) to reveal repeating structure}{figure.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Strong intra-day periodicity.}{11}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Strong weekly periodicity.}{11}{section*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{No monthly (30 days) periodicity.}{11}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Yearly decay only.}{11}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Frequency-domain analysis.}{11}{section*.31}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Year-long SIREN-RoPE attention in the time domain (top) and its FFT magnitude spectrum (bottom). Vertical dashed lines mark the weekly ($\frac  {1}{7}$\,cycles/day) and daily (1\,cycle/day) frequencies. Both frequencies exhibit prominent peaks; sub-harmonics at $\frac  {1}{2}$, $\frac  {1}{3}$, \ldots  cycles/day are also visible.}}{12}{figure.4}\protected@file@percent }
+\newlabel{fig:year_fft}{{4}{12}{Year-long SIREN-RoPE attention in the time domain (top) and its FFT magnitude spectrum (bottom). Vertical dashed lines mark the weekly ($\frac {1}{7}$\,cycles/day) and daily (1\,cycle/day) frequencies. Both frequencies exhibit prominent peaks; sub-harmonics at $\frac {1}{2}$, $\frac {1}{3}$, \ldots cycles/day are also visible}{figure.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Joint ordinal--temporal attention landscape.}{12}{section*.32}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces 2D attention score heatmap as a function of key ordinal position (y-axis, 0--120) and key timestamp (x-axis) for four time spans. Color encodes attention magnitude (brighter = higher). The ordinal axis exhibits monotone decay irrespective of the time span; the temporal axis exhibits clear intra-day and intra-week oscillations in the short-span panels.}}{13}{figure.5}\protected@file@percent }
+\newlabel{fig:attn_heatmap}{{5}{13}{2D attention score heatmap as a function of key ordinal position (y-axis, 0--120) and key timestamp (x-axis) for four time spans. Color encodes attention magnitude (brighter = higher). The ordinal axis exhibits monotone decay irrespective of the time span; the temporal axis exhibits clear intra-day and intra-week oscillations in the short-span panels}{figure.5}{}}
+\gdef \@abspage@last{13}

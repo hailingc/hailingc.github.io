@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperparameter-Divergent Ensemble Training | Hailing Cheng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2f4a;
+            --accent: #e85d04;
+            --accent-light: #faa307;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --code-bg: #f7f8fc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            line-height: 1.8;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(232, 93, 4, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(250, 163, 7, 0.04) 0%, transparent 50%),
+                linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .article-header {
+            padding: 4rem 0 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .article-badge {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .authors {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .authors strong {
+            color: var(--text);
+        }
+
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: #f0f4f8;
+            color: var(--primary);
+            padding: 0.4rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .paper-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .paper-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            text-decoration: none;
+            padding: 0.85rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(232, 93, 4, 0.25);
+        }
+
+        .paper-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 93, 4, 0.35);
+        }
+
+        .paper-link.secondary {
+            background: white;
+            color: var(--primary);
+            border: 1.5px solid var(--border);
+            box-shadow: none;
+        }
+
+        .paper-link.secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 4px 15px rgba(232, 93, 4, 0.1);
+        }
+
+        .paper-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        article {
+            padding: 3rem 0;
+        }
+
+        article h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        article h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.2em;
+            bottom: 0.2em;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-light));
+            border-radius: 2px;
+        }
+
+        article h2:first-child {
+            margin-top: 0;
+        }
+
+        article h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2rem 0 0.75rem;
+        }
+
+        article p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        article ul, article ol {
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+        }
+
+        article li {
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        article li strong {
+            color: var(--primary);
+        }
+
+        .highlight-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        .math-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 47, 74, 0.08);
+        }
+
+        .result-value {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .result-sublabel {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .figure {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .figure img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .figure img.narrow {
+            max-width: 50%;
+        }
+
+        @media (max-width: 640px) {
+            .figure img {
+                max-width: 100%;
+            }
+        }
+
+        .figure-caption {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-style: italic;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: var(--code-bg);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(232, 93, 4, 0.03);
+        }
+
+        .improvement {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .crash {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .best {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            .article-header {
+                padding: 2.5rem 0 2rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            article h2 {
+                font-size: 1.35rem;
+            }
+
+            .result-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="../index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Blog
+            </a>
+        </nav>
+
+        <header class="article-header">
+            <div class="article-meta">
+                <span class="article-date">NeurIPS 2026</span>
+                <span class="article-badge">Research Paper</span>
+            </div>
+            <h1>Scalable Hyperparameter-Divergent Ensemble Training with Automatic Learning Rate Exploration for Large Models</h1>
+            <p class="authors">
+                By <strong>Hailing Cheng</strong>, Tao Huang, Chen Zhu, Antonio Alonso<br>
+                LinkedIn Inc.
+            </p>
+            <div class="article-tags">
+                <span class="tag">Distributed Training</span>
+                <span class="tag">Ensemble Methods</span>
+                <span class="tag">Hyperparameter Optimization</span>
+                <span class="tag">Large-Scale ML</span>
+            </div>
+            <div class="paper-links">
+                <a href="../papers/ensemble/ensemble.pdf" class="paper-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    Download Paper (PDF)
+                </a>
+                <a href="https://github.com/hailingc/ensemble_training" class="paper-link secondary" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    Code on GitHub
+                </a>
+            </div>
+        </header>
+
+        <article>
+            <h2>TL;DR</h2>
+            <p>
+                Large-scale distributed training assigns hundreds of GPU replicas to compute effectively <strong>identical gradient updates</strong>—a practice that leaves the entire space of learning rate configurations unexplored. We propose <strong>HDET (Hyperparameter-Divergent Ensemble Training)</strong>, which repurposes these replicas for simultaneous learning rate exploration at negligible extra communication cost.
+            </p>
+            <p>
+                HDET alternates between a <em>fan-out</em> phase (replicas train under a structured spread of learning rates) and a <em>converge</em> phase (parameters are averaged via AllReduce every T steps). An <strong>auto-LR controller</strong> then uses cross-replica loss signals to adaptively steer the base schedule—no hyperparameter tuning required. On production recommendation models, HDET trains stably at <strong>9× the learning rate</strong> that causes standard DDP to crash, achieving a lower final training loss (3.277 vs. 3.294).
+            </p>
+
+            <h2>The Problem: Wasted GPU Diversity</h2>
+            <p>
+                Modern large-model training parallelizes across hundreds of GPU replicas using data-parallel SGD (DDP). In the standard paradigm, every replica maintains an <strong>identical copy of model parameters</strong> and advances under an identical learning rate. Beyond improving gradient estimates through a larger effective batch, the additional hardware contributes <em>no qualitative diversity</em> to the optimization trajectory.
+            </p>
+            <p>
+                Meanwhile, the learning rate schedule is among the most consequential hyperparameter choices in large-model training. Popular schedules—one-cycle annealing, cosine decay, linear warmup-decay—must be specified <em>before</em> training begins, leaving practitioners to rely on expensive grid searches or heuristics calibrated on smaller proxy models.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>The Core Insight:</strong> The N parallel replicas could explore N distinct learning rate trajectories simultaneously, at no additional hardware cost. If those diverging trajectories periodically merge through parameter averaging, the resulting model harvests ensemble-like generalization benefits within a <em>single</em> training run.
+                </p>
+            </div>
+
+            <h2>HDET: Fan-Out / Converge Cycle</h2>
+            <p>
+                HDET adds three targeted modifications on top of any existing DDP + OneCycleLR setup:
+            </p>
+            <ol>
+                <li><strong>Fan-out:</strong> Each of N GPU replicas trains under a distinct learning rate drawn from a symmetric spread [η̄(1−α), η̄(1+α)] around the current base schedule η̄, where α ≥ 0 is the spread ratio.</li>
+                <li><strong>Converge:</strong> Every T training steps, parameters are averaged across all replicas via AllReduce, producing a unified model that seeds the next fan-out round.</li>
+                <li><strong>Auto-LR:</strong> An optional controller uses cross-replica loss signals to update the base schedule between sync intervals.</li>
+            </ol>
+
+            <div class="math-block">
+                Rank r learning rate: η<sub>r</sub><sup>(t)</sup> = η<sup>(t)</sup> · ρ<sub>r</sub><br><br>
+                Converge step: θ<sub>r</sub><sup>(t)</sup> ← (1/N) Σ θ<sub>r'</sub><sup>(t)</sup><br><br>
+                Setting α = 0 recovers standard DDP exactly
+            </div>
+
+            <p>
+                The extra communication cost over standard DDP is O(1/T)—in our production experiments (8 H100 GPUs, T=1,000), the extra AllReduce adds approximately <strong>0.1% wall-clock time</strong>.
+            </p>
+
+            <div class="figure">
+                <img src="../papers/ensemble/crash.png" alt="Training loss curves showing HDET stability vs. baseline crashes">
+                <p class="figure-caption">Figure 1: Training loss vs. steps at η_max = 0.0009. The standard baseline (gray) crashes at ~18K steps. Warm-Init alone (teal) survives to ~185K steps then diverges. HDET (dark blue) converges smoothly to 3.277—below Baseline-Low (3.294) trained at 9× lower learning rate.</p>
+            </div>
+
+            <h2>The Auto-LR Controller</h2>
+            <p>
+                Building on the ensemble substrate, the auto-LR controller treats the relative training loss across replicas as a <strong>gradient-free performance signal</strong>. Replicas with below-average loss receive proportionally higher weight in a softmax-weighted average of per-rank learning rates; the resulting performance deviation drives a momentum-based velocity that shifts the base schedule up or down at each sync point.
+            </p>
+
+            <div class="math-block">
+                Score: s<sub>r</sub><sup>(k)</sup> = (L̄<sup>(k)</sup> − L<sub>r</sub><sup>(k)</sup>) / σ<br><br>
+                Weight: w<sub>r</sub><sup>(k)</sup> = exp(s<sub>r</sub><sup>(k)</sup>) / Σ exp(s<sub>r'</sub><sup>(k)</sup>)<br><br>
+                Update: v<sup>(k+1)</sup> = β·v<sup>(k)</sup> + (1−β)·Δ<sup>(k)</sup>
+            </div>
+
+            <p>
+                If high-LR replicas consistently outperform low-LR ones, the base schedule adapts upward; if the opposite holds, it adapts downward. This constitutes a <strong>within-run optimizer over the learning rate schedule</strong>, eliminating the need for a priori schedule selection.
+            </p>
+
+            <div class="figure">
+                <img src="../papers/ensemble/lr_groups.png" alt="Per-group learning rate schedules across training">
+                <p class="figure-caption">Figure 2: Per-group LR schedules for four parameter groups. Solid: baseline (OneCycleLR). Dashed: HDET GPU 0 (lowest-LR replica). The auto-LR controller discovers that transformer layers should decay fastest while non-decay parameters maintain higher LR throughout—mirroring discriminative fine-tuning but emerging automatically from cross-replica loss signals.</p>
+            </div>
+
+            <h2>Warm Noisy Initialization</h2>
+            <p>
+                HDET can optionally be seeded from a pre-trained checkpoint. Before the first fan-out phase, independent Gaussian noise is added to each replica's parameters, initializing each in a distinct neighborhood of a high-quality solution. This provides a warm start that accelerates early convergence and encourages replicas to explore different regions of the loss landscape.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>Key Finding:</strong> Warm initialization <em>alone</em> is insufficient at aggressive learning rates—without periodic weight averaging, noisy weights compound with high-LR updates and eventually diverge (Warm-Init crashes at ~185K steps). Its role is to supply better-quality starting points for the ensemble, not to replace the stabilization provided by the fan-out/converge cycle.
+                </p>
+            </div>
+
+            <h2>Experimental Results</h2>
+            <p>
+                We evaluate on a production-scale news-feed dataset from a major social network, training jointly on three engagement tasks (Contribution, Like, LongDwell) for one epoch on 8 NVIDIA H100 GPUs. All variants use the same fixed AttnMVP backbone with identical architecture and optimizer.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Description</th>
+                        <th>Avg LR</th>
+                        <th>Train Loss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Baseline-Low</td>
+                        <td>Standard DDP, α=0</td>
+                        <td>0.0001</td>
+                        <td>3.294</td>
+                    </tr>
+                    <tr>
+                        <td>Baseline-High</td>
+                        <td>Standard DDP, α=0</td>
+                        <td>0.0009</td>
+                        <td class="crash">4.169 ✝ (crash)</td>
+                    </tr>
+                    <tr>
+                        <td>Warm-Init</td>
+                        <td>Perturbed init, no averaging</td>
+                        <td>0.0009</td>
+                        <td class="crash">4.674 ✝ (crash)</td>
+                    </tr>
+                    <tr>
+                        <td>HDET w/o auto-LR</td>
+                        <td>LR spread + warm init</td>
+                        <td>0.0009</td>
+                        <td class="improvement">3.280</td>
+                    </tr>
+                    <tr>
+                        <td>HDET w/o warm init</td>
+                        <td>LR spread + auto-LR, cold start</td>
+                        <td>0.0009</td>
+                        <td class="improvement">3.281</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HDET (full)</strong></td>
+                        <td>LR spread + warm init + auto-LR</td>
+                        <td>0.0009</td>
+                        <td class="best improvement">3.277 ★</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-value">9×</div>
+                    <div class="result-label">Higher LR than stable baseline</div>
+                    <div class="result-sublabel">without divergence</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">3.277</div>
+                    <div class="result-label">Final Training Loss</div>
+                    <div class="result-sublabel">vs. 3.294 baseline</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">0.1%</div>
+                    <div class="result-label">Extra Communication</div>
+                    <div class="result-sublabel">overhead vs. standard DDP</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">10+</div>
+                    <div class="result-label">Independent Replications</div>
+                    <div class="result-sublabel">consistent improvement</div>
+                </div>
+            </div>
+
+            <h2>Key Findings</h2>
+
+            <h3>Stability Through Averaging, Not Initialization</h3>
+            <p>
+                Warm-Init diverges <em>more</em> severely than Baseline-High (4.674 vs. 4.169), confirming that <strong>weight averaging—not initialization—is the primary stabilizer</strong>. Because the LR spread always keeps some replicas conservative, the AllReduce consensus is guaranteed to lie in a stable region, preventing the divergence that a single aggressive LR cannot avoid.
+            </p>
+
+            <h3>Emergent Per-Group Learning Rate Decay</h3>
+            <p>
+                The auto-LR controller discovers distinct per-group decay rates without manual specification: <code>transformer</code> decays fastest (dense high-variance gradients converge quickly), <code>non_decay</code> parameters slowest (flat landscapes absorb gradient signal throughout), with embeddings and non-embedding layers in between. This ordering mirrors discriminative fine-tuning but <strong>emerges automatically</strong> from cross-replica loss signals.
+            </p>
+
+            <h3>Generalizes Beyond Learning Rate</h3>
+            <p>
+                The framework generalizes to any scalar hyperparameter that does not alter model architecture—dropout rate, attention temperature, weight-decay coefficient, label-smoothing. Inter-replica loss differences serve as zero-order hypergradients that guide the search direction, making HDET a general-purpose zero-cost hyperparameter search engine running inside the training loop.
+            </p>
+
+            <h2>Production Impact</h2>
+            <p>
+                HDET is implemented as a drop-in replacement for PyTorch's <code>OneCycleLR</code> scheduler, requiring <strong>no changes to model architecture, optimizer, or data pipeline</strong>. The model trained with HDET is deployed in the production ranking system and has been validated across 10+ independent training runs, consistently outperforming the conservative-LR baseline on both offline AUC and NE metrics.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>Bottom Line:</strong> HDET converts the wasted uniformity of DDP replicas into a structured hyperparameter exploration ensemble. At negligible communication overhead (O(1/T)), it enables training at 9× higher learning rates that would otherwise cause divergence, while discovering better optima and autonomously adapting the learning rate schedule—all within a single training run.
+                </p>
+            </div>
+        </article>
+
+        <footer>
+            <p>© 2026 Hailing Cheng · Hosted on <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>

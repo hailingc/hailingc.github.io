@@ -1,0 +1,150 @@
+\begin{thebibliography}{22}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Chen et~al.(2018)Chen, Rubanova, Bettencourt, and
+  Duvenaud]{chen2018neuralode}
+R.~T.~Q. Chen, Y.~Rubanova, J.~Bettencourt, and D.~Duvenaud.
+\newblock Neural ordinary differential equations.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~31, 2018.
+
+\bibitem[Chen et~al.(2023)Chen, Wong, Chen, and Tian]{chen2023pi}
+S.~Chen, S.~Wong, L.~Chen, and Y.~Tian.
+\newblock Extending context window of large language models via positional
+  interpolation, 2023.
+
+\bibitem[Chen et~al.(2024)Chen, Ren, Wang, Fang, Sun, and
+  Li]{chen2024contiformer}
+Y.~Chen, K.~Ren, Y.~Wang, Y.~Fang, W.~Sun, and D.~Li.
+\newblock {ContiFormer}: Continuous-time transformer for irregular time series
+  modeling, 2024.
+
+\bibitem[Cheng(2026)]{cheng2026}
+H.~Cheng.
+\newblock Beyond interleaving: Causal attention reformulations for generative
+  recommender systems, 2026.
+\newblock URL \url{https://arxiv.org/abs/2603.10369}.
+
+\bibitem[Dai et~al.(2019)Dai, Yang, Yang, Carbonell, Le, and
+  Salakhutdinov]{dai2019transformerxl}
+Z.~Dai, Z.~Yang, Y.~Yang, J.~Carbonell, Q.~V. Le, and R.~Salakhutdinov.
+\newblock Transformer-{XL}: Attentive language models beyond a fixed-length
+  context.
+\newblock In \emph{Proceedings of the 57th Annual Meeting of the Association
+  for Computational Linguistics (ACL)}, pages 2978--2988, 2019.
+
+\bibitem[Ding et~al.(2024)Ding, Zhang, Zhang, Xu, Shang, Xu, Yang, and
+  Yang]{zhang2024longrope}
+Y.~Ding, L.~L. Zhang, C.~Zhang, Y.~Xu, N.~Shang, J.~Xu, F.~Yang, and M.~Yang.
+\newblock {LongRoPE}: Extending {LLM} context window beyond 2 million tokens,
+  2024.
+
+\bibitem[Fons et~al.(2022)Fons, Ruiz, Willetts, and
+  Mayol-Cuevas]{fons2022hypertime}
+E.~Fons, A.~S. Ruiz, M.~Willetts, and W.~Mayol-Cuevas.
+\newblock {HyperTime}: Implicit neural representations for time series, 2022.
+
+\bibitem[He et~al.(2021)He, Liu, Gao, and Chen]{he2020deberta}
+P.~He, X.~Liu, J.~Gao, and W.~Chen.
+\newblock {DeBERTa}: Decoding-enhanced {BERT} with disentangled attention.
+\newblock In \emph{Proceedings of the 9th International Conference on Learning
+  Representations (ICLR)}, 2021.
+
+\bibitem[Kazemi et~al.(2019)Kazemi, Goel, Jain, Kobyzev, Sethi, Forsyth, and
+  Poupart]{kazemi2019time2vec}
+S.~M. Kazemi, R.~Goel, K.~Jain, I.~Kobyzev, A.~Sethi, P.~Forsyth, and
+  P.~Poupart.
+\newblock Time2vec: Learning a model-agnostic representation of time, 2019.
+
+\bibitem[Ke et~al.(2021)Ke, He, and Liu]{ke2020tupe}
+G.~Ke, D.~He, and T.-Y. Liu.
+\newblock Rethinking positional encoding in language pre-training, 2021.
+
+\bibitem[Kidger et~al.(2020)Kidger, Morrill, Foster, and
+  Lyons]{kidger2020neuralcde}
+P.~Kidger, J.~Morrill, J.~Foster, and T.~Lyons.
+\newblock Neural controlled differential equations for irregular time series.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~33, 2020.
+
+\bibitem[Le~Naour et~al.(2024)Le~Naour, Serrano, Migus, Yin, Agoua, Baskiotis,
+  Gallinari, and Cord]{lenaour2024inrts}
+E.~Le~Naour, L.~Serrano, L.~Migus, Y.~Yin, G.~Agoua, N.~Baskiotis,
+  P.~Gallinari, and M.~Cord.
+\newblock Time series continuous modeling for imputation and forecasting with
+  implicit neural representations, 2024.
+
+\bibitem[Li et~al.(2020)Li, Wang, and McAuley]{li2020tisasrec}
+J.~Li, Y.~Wang, and J.~McAuley.
+\newblock Time interval aware self-attention for sequential recommendation.
+\newblock In \emph{Proceedings of the 13th International Conference on Web
+  Search and Data Mining (WSDM)}, pages 322--330, 2020.
+
+\bibitem[Peng et~al.(2023)Peng, Quesnelle, Fan, and Shippole]{peng2023yarn}
+B.~Peng, J.~Quesnelle, H.~Fan, and E.~Shippole.
+\newblock {YaRN}: Efficient context window extension of large language models,
+  2023.
+
+\bibitem[Raffel et~al.(2020)Raffel, Shazeer, Roberts, Lee, Narang, Matena,
+  Zhou, Li, and Liu]{raffel2020t5}
+C.~Raffel, N.~Shazeer, A.~Roberts, K.~Lee, S.~Narang, M.~Matena, Y.~Zhou,
+  W.~Li, and P.~J. Liu.
+\newblock Exploring the limits of transfer learning with a unified text-to-text
+  transformer.
+\newblock \emph{Journal of Machine Learning Research}, 21\penalty0
+  (140):\penalty0 1--67, 2020.
+
+\bibitem[Shaw et~al.(2018)Shaw, Uszkoreit, and Vaswani]{shaw2018relative}
+P.~Shaw, J.~Uszkoreit, and A.~Vaswani.
+\newblock Self-attention with relative position representations.
+\newblock In \emph{Proceedings of the 2018 Conference of the North American
+  Chapter of the Association for Computational Linguistics: Human Language
+  Technologies (NAACL-HLT)}, pages 464--468, 2018.
+
+\bibitem[Sitzmann et~al.(2020)Sitzmann, Martel, Bergman, Lindell, and
+  Wetzstein]{sitzmann2020siren}
+V.~Sitzmann, J.~N.~P. Martel, A.~W. Bergman, D.~B. Lindell, and G.~Wetzstein.
+\newblock Implicit neural representations with periodic activation functions.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~33, pages 7462--7473, 2020.
+
+\bibitem[Su et~al.(2024)Su, Ahmed, Lu, Pan, Bo, and Liu]{su2024roformer}
+J.~Su, M.~Ahmed, Y.~Lu, S.~Pan, W.~Bo, and Y.~Liu.
+\newblock Roformer: Enhanced transformer with rotary position embedding.
+\newblock \emph{Neurocomputing}, 568:\penalty0 127063, 2024.
+
+\bibitem[Tancik et~al.(2020)Tancik, Srinivasan, Mildenhall, Fridovich-Keil,
+  Raghavan, Singhal, Ramamoorthi, Barron, and Ng]{tancik2020fourier}
+M.~Tancik, P.~P. Srinivasan, B.~Mildenhall, S.~Fridovich-Keil, N.~Raghavan,
+  U.~Singhal, R.~Ramamoorthi, J.~T. Barron, and R.~Ng.
+\newblock Fourier features let networks learn high frequency functions in low
+  dimensional domains.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~33, pages 7537--7547, 2020.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017attention}
+A.~Vaswani, N.~Shazeer, N.~Parmar, J.~Uszkoreit, L.~Jones, A.~N. Gomez,
+  {\L}.~Kaiser, and I.~Polosukhin.
+\newblock Attention is all you need.
+\newblock \emph{Advances in neural information processing systems}, 30, 2017.
+
+\bibitem[Wei et~al.(2025)Wei, Wu, Yi, Shirkavand, and
+  Gong]{shirkavand2025torope}
+X.~Wei, J.~Wu, D.~Yi, R.~Shirkavand, and M.~Gong.
+\newblock Rotate both ways: Time-and-order rope for generative recommendation.
+\newblock \emph{arXiv preprint arXiv:2510.20455}, 2025.
+
+\bibitem[Zhai et~al.(2024)Zhai, Liao, Liu, Wang, Li, Cao, Gao, Gong, Gu, He,
+  Lu, and Shi]{zhai2024actions}
+J.~Zhai, L.~Liao, X.~Liu, Y.~Wang, R.~Li, X.~Cao, L.~Gao, Z.~Gong, F.~Gu,
+  M.~He, Y.~Lu, and Y.~Shi.
+\newblock Actions speak louder than words: Trillion-parameter sequential
+  transducers for generative recommendations, 2024.
+\newblock URL \url{https://arxiv.org/abs/2402.17152}.
+
+\end{thebibliography}
