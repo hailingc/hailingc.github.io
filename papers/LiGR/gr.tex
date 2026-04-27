@@ -1,0 +1,701 @@
+\documentclass[sigconf]{acmart}
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    Bib\TeX}}}
+
+%% Rights management information.  This information is sent to you
+%% when you complete the rights form.  These commands have SAMPLE
+%% values in them; it is your responsibility as an author to replace
+%% the commands and values with those provided to you when you
+%% complete the rights form.
+\setcopyright{acmlicensed}
+\copyrightyear{2018}
+\acmYear{2018}
+\acmDOI{XXXXXXX.XXXXXXX}
+%% These commands are for a PROCEEDINGS abstract or paper.
+\acmConference[Conference acronym 'XX]{}{June 03--05,
+  2018}{Woodstock, NY}
+%%
+%%  Uncomment \acmBooktitle if the title of the proceedings is different
+%%  from ``Proceedings of ...''!
+%%
+%%\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
+%%  June 03--05, 2018, Woodstock, NY}
+\acmISBN{978-1-4503-XXXX-X/2018/06}
+
+\newcommand{\systemname}{\textit{Feed SR}}
+\newcommand{\borja}[1]{\textcolor{red}{[Borja] #1}}
+% \renewcommand{\baselinestretch}{0.965}
+
+%%
+%% end of the preamble, start of the body of the document source.
+\raggedbottom
+\begin{document}
+
+%%
+%% The "title" command has an optional parameter,
+%% allowing the author to define a "short title" to be used in page headers.
+%% \\ is used to split the paper title in 2 lines for short title
+% \title{Linkedin Sequential Recommender ({\systemname}): Rebuilding Linkedin Feed Ranker \\ with Industrial Scale Training, Serving and Deployment of Sequential Recommender.}
+% shorter title
+\title{An Industrial-Scale Sequential Recommender for LinkedIn Feed Ranking}
+
+%%
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+%% Of note is the shared affiliation of the first two authors, and the
+%% "authornote" and "authornotemark" commands
+%% used to denote shared contribution to the research.
+% \author{Lars Hertel}
+% \authornote{Both authors contributed equally to this research.}
+% \author{Gaurav Srivastava}
+% \authornotemark[1]
+% \author{Syed Ali Naqvi}
+% \author{Satyam Kumar}
+% \author{Yue Zhang}
+% \email{larst@affiliation.org}
+% \affiliation{%
+%   \institution{Linkedin Inc}
+%   \city{Mountain View}
+%   \state{California}
+%   \country{USA}
+% }
+
+
+% \author{Borja Ocejo}
+% \author{Benjamin Zelditch}
+% \author{Adrian Englhardt}
+% \author{Hailing Cheng}
+% \author{Andy Hu}
+% \email{larst@affiliation.org}
+% \affiliation{%
+%   \institution{Linkedin Inc}
+%   \city{Mountain View}
+%   \state{California}
+%   \country{USA}
+% }
+
+
+% \author{Antonio Alonso}
+% \author{Daming Li}
+% \author{Siddharth Dangi}
+% \author{Chen Zhu}
+% \author{Mingzhou Zhou}
+% \email{larst@affiliation.org}
+% \affiliation{%
+%   \institution{Linkedin Inc}
+%   \city{Mountain View}
+%   \state{California}
+%   \country{USA}
+% }
+
+
+% \author{Wanning Li}
+% \author{Tao}
+% \author{Fedor Borisyuk}
+% \author{Ganesh Parameswan}
+% \email{larst@affiliation.org}
+% \affiliation{%
+%   \institution{Linkedin Inc}
+%   \city{Mountain View}
+%   \state{California}
+%   \country{USA}
+% }
+
+% \author{Birjodh Tiwana}
+% \author{Sriram Sankar}
+% \author{Qing Lan}
+% \author{Julie Choi}
+% \author{Souvik Ghosh}
+% \email{larst@affiliation.org}
+% \affiliation{%
+%   \institution{Linkedin Inc}
+%   \city{Mountain View}
+%   \state{California}
+%   \country{USA}
+% }
+
+
+
+
+% to enable this author formatting, had to add a footnotetext after introduction
+\author{Lars Hertel\textsuperscript{$\ast$}, Gaurav Srivastava\textsuperscript{$\ast$},
+Syed Ali Naqvi, Satyam Kumar, Yue Zhang, Borja Ocejo\textsuperscript{$\dagger$}, Benjamin Zelditch,
+Adrian Englhardt, Hailing Cheng, Andy Hu, Antonio Alonso, Daming Li, Siddharth Dangi,
+Chen Zhu, Mingzhou Zhou, Wanning Li, Tao Huang, Fedor Borisyuk, Ganesh Parameswaran,
+Birjodh Tiwana, Sriram Sankar, Qing Lan, Julie Choi, Souvik Ghosh\textsuperscript{$\dagger$}}
+
+\affiliation{
+  \institution{LinkedIn Inc.}
+  \country{USA}
+}
+
+% One (or a few) emails for the whole author group
+\email{lhertel@linkedin.com,  gsrivastava@linkedin.com}   % optionally add a second
+
+
+
+
+
+%%
+%% By default, the full list of authors will be used in the page
+%% headers. Often, this list is too long, and will overlap
+%% other information printed in the page headers. This command allows
+%% the author to define a more concise list
+%% of authors' names for this purpose.
+\renewcommand{\shortauthors}{Lars Hertel et al.}
+
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+
+\begin{abstract}
+LinkedIn Feed enables professionals worldwide to discover relevant content, build connections, and share knowledge at scale. We present \emph{Feed Sequential Recommender} ({\systemname}), a transformer-based sequential ranking model for LinkedIn Feed that replaces a DCNv2-based ranker and meets strict production constraints. We detail the modeling choices, training techniques, and serving optimizations that enable deployment at LinkedIn scale. {\systemname} is currently the primary member experience on LinkedIn’s Feed and shows significant improvements in member engagement (+2.10\% time spent) in online A/B tests compared to the existing production model. We also describe our deployment experience with alternative sequential and LLM-based ranking architectures and why {\systemname} provided the best combination of online metrics and production efficiency.
+
+
+\end{abstract}
+
+
+
+%%
+%% Keywords. The author(s) should pick words that accurately describe
+%% the work being presented. Separate the keywords with commas.
+\keywords{Sequential Recommendation, Generative Recommendation, Recommender systems, Ranking}
+%% A "teaser" image appears between the author and affiliation
+%% information and the body of the document, and typically spans the
+%% page.
+
+
+\received{8 February 2026}
+% \received[revised]{12 March 2009}
+% \received[accepted]{5 June 2009}
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+\begingroup
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\footnotetext[1]{Both authors contributed equally to this research.}
+\footnotetext[2]{Work done while at LinkedIn.}
+\endgroup
+
+
+\section{Introduction}
+LinkedIn Feed enables professionals to share knowledge and ideas through text, images, and video. Members viewing the Feed are presented with posts from their network, as well as relevant posts from members they are not connected to. In addition, the Feed includes other content such as job changes, job opportunities, and suggested connections. Posts in the Feed are ranked by predicted relevance, defined as the likelihood that a member will take actions such as clicking, liking, commenting, or sharing. Improving the accuracy of these predictions leads to more relevant content and is a key driver of growth for both the LinkedIn Feed and the broader LinkedIn ecosystem. Sequential recommendation methods have shown promise in improving prediction accuracy of member actions. However, there are several challenges in applying sequential recommendation to the LinkedIn Feed:
+\begin{itemize}
+    \item LinkedIn has more than 1.2 billion members, and the activity distribution is long-tailed, with some members having an extremely high number of interactions compared to the average.
+    \item The LinkedIn Feed spans a corpus of billions of posts that is both large in scale and highly dynamic. Although posts can persist for weeks, they can receive a large portion of their interactions within the first 24 hours after posting.
+    \item To offer the best experience for all members, the Feed needs to be ranked in real-time as the member visits LinkedIn.
+\end{itemize}
+We introduce {\systemname}, LinkedIn Feed’s sequential recommendation model, and outline how we address these challenges, including:
+\begin{itemize}
+    \item Improving relevance for members with long and short interaction histories through our sequential model architecture (\ref{sec:architecure}) combined with member profile embeddings (\ref{sec:member-profile-embed}).
+    \item Capturing evolving member interests through RoPE \cite{su2024roformer} (\ref{sec:rope}), incremental training (\ref{sec:incremental-training}), and a recency weighted loss (\ref{sec:loss-engineering}).
+    \item Modeling a large dynamic corpus of items by supplementing the sequence model with late-fused numeric features. (\ref{sec:late-fusion},\ref{sec:head-arch},\ref{sec:features})
+    \item CPU and GPU optimizations that allow us to inference {\systemname} in real-time. (\ref{sec:online-serving})
+\end{itemize}
+
+We also discuss lessons from our experiments with other approaches like fine-tuning LLMs and alternate architectures like TransAct \cite{xia2023transact} in Section~\ref{sec:alternative-approaches}.
+
+\section{Related Work}
+\label{sec:related_work}
+
+Our work intersects three active research directions: industrial recommendation models with rich feature sets, sequential recommendation with long user histories, and generative recommendation models that amortize computation across multiple candidate scores.
+
+\paragraph{Industrial Recommendation Models.}
+Deep Learning Recommendation Models (DLRMs) combine dense numerical features, sparse categorical IDs, and cross features to deliver high-quality ranking in production systems \cite{naumov2019dlrm,cheng2016wide}. Enhancements such as explicit cross layers (e.g., DCNv2) and multi-task sharing (e.g., MMoE) provide practical performance gains in large-scale ranking \cite{wang2021dcnv2,ma2018mmoe}. These models remain dominant in online settings due to their ability to integrate rich feature interactions.
+
+\paragraph{Sequential Recommendation.}
+Modeling user behavior sequences is essential for capturing temporal patterns and long-range interests. Transformer–based sequence encoders like SASRec and bidirectional masked pretraining such as BERT4Rec improve next-item prediction by attending over long history contexts \cite{kang2018sasrec,sun2019bert4rec}. Industrial variants extend these ideas with target-aware attention and dynamic retrieval of relevant behaviors \cite{pei2021end2endbehaviorretrieval}.
+
+\paragraph{Generative Recommendation Models.}
+Generative recommendation models (GRMs) treat user histories as token sequences and use transformer transduction for next-item prediction, enabling amortized scoring across many targets \cite{zhai2024actions}. HSTU-style architectures have demonstrated competitive quality with improved efficiency for long histories, but their integration with production-level feature stacks is non-trivial. Recent industrial GRM frameworks such as MTGR emphasize retaining engineered features and optimizing system deployment for ranking at scale \cite{han2025mtgr}. OneRec similarly explores iterative preference alignment in a unified generative retrieve-and-rank framework \cite{deng2025onerec}.
+
+\paragraph{Efficient Training and Inference.}
+Efficient attention kernels such as FlashAttention reduce memory movement and latency for long sequences, which is crucial for transformers in production recommender systems \cite{dao2022flashattention}. Production-ready libraries like TorchRec further support scalable recommendation training and inference~\cite{ivanov2022torchrec}.
+
+Our work extends these lines by integrating a sequential model with rich production feature sets under strict latency and throughput constraints in LinkedIn Feed ranking, while retaining high offline and online quality.
+
+
+\section{Background}
+\subsection{LinkedIn Feed}
+LinkedIn's mission is to connect the world’s professionals to make them more productive and successful. As part of this mission, LinkedIn Feed serves to provide access to ideas, learning, and inspiration from members' networks and beyond. To achieve this, the Feed system optimizes for a variety of actions, among them:
+\begin{enumerate}
+    \item Long Dwell: dwelling on a post longer than a specified threshold of time, depending on the post-type
+    \item Contribution: a like, comment, or share on a post.
+\end{enumerate}
+To generate a list of posts for a member, candidate posts are first retrieved from multiple sources \cite{ramanujam2025large,Ghike_Gupta_2016} and combined. Then a ranking model predicts the likelihood of each action. The resulting scores are combined via weights in an objective function that is used to rank the posts. Finally, additional business logic is applied on the ranked post list.
+
+
+\subsection{Feed ranking model}\label{sec:existing}
+The existing Feed ranking model uses post impressions as training samples. The labels are derived from the possible actions. Impressions that do not have a click are retained randomly with 0.1 probability. The model is initially trained on three weeks of Feed data, and then incrementally trained on a daily basis. The ranking model uses a large number of features that can be divided into
+\begin{itemize}
+    \item Numeric features: these are dominated by post interaction counts and affinity counts. The latter refers to the number of times a member interacted with another member, an object type, or other dimension.
+    \item Content embeddings: text embeddings externally computed with a text embedding model and statically served to the model \cite{srinivasa2025linkedin}.
+    \item ID embeddings: high cardinality embeddings learned as part of the model training, for example, for Feed actors.
+    \item Categorical features: examples are post type, device type, or retrieval source.
+\end{itemize}
+
+The model is implemented in Tensorflow and uses two separate neural network towers. The first tower is for passive tasks such as click, skip, and long-dwell. The second tower predicts active actions such as like, comment, and share. Each tower uses a DCNv2 module, followed by multiple fully-connected dense-gating layers \cite{borisyuk2024lirank}, and a multi-task output.
+
+The model is trained using a binary cross-entropy loss. A weight of 10 is applied to negative samples based on the previously mentioned down-sampling. Models are evaluated offline using AUC.
+
+Online, the ranking model is scored on CPU in a Java stack. One of the key online metrics is \emph{time spent}.
+
+\section{{\systemname} -- Experiments and offline results}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{pics/paper_diagram.png}
+  \caption{The {\systemname} model architecture.}
+  \Description{Input is a sequence of Feed post and action embedding, interleaved.}
+  \label{fig:architecture}
+\end{figure}
+
+\subsection{Architecture overview}\label{sec:architecure}
+{\systemname} is a new ranking system for the LinkedIn Feed based on sequential recommendation. The model architecture is based on the ranking model in \cite{zhai2024actions} and enhanced to fit LinkedIn Feed's specific use case,  product requirements, and infrastructure. Figure \ref{fig:architecture} shows a diagram of the model. As shown in Figure \ref{fig:architecture}, we interleave posts with actions similar to \cite{zhai2024actions}. The sequence of interleaved posts and actions are processed by a number of transformer blocks as described in Section~\ref{sec:transformer-arch} with a causal attention mask \cite{vaswani2017attention}. After the transformer blocks, outputs corresponding to interleaved action inputs are discarded as shown in Figure~\ref{fig:architecture} \cite{zhai2024actions}. The result is concatenated with additional context features (Section~\ref{sec:late-fusion}) and further processed by a "head-architecture" deep neural network with a multi-task output (Section~\ref{sec:head-arch}). The multi-task output predicts the actions that the member took on the post. These are the same actions as for the existing architecture in Section \ref{sec:existing}. 
+The model is trained on member interaction histories to predict actions at all points in the interaction sequence. The loss function is a binary cross-entropy loss with weighting as described in Section~\ref{sec:loss-engineering} and is applied to all sequence positions.
+During inference, the candidates to be ranked are appended to the end of the sequence and scored at once. More details on inference can be found in Section~\ref{sec:online-gpu-optimizations}.
+
+\subsection{Architecture Details}
+
+\subsubsection{Model Input}\label{sec:model-input}
+
+The model input consists of a history of impressed Feed posts interleaved with the actions taken by the member on each post. Histories are formed from one year of training data (defined in Section~\ref{sec:existing}). For each member, we keep the most recent $T{=}1000$ impressions, ordered chronologically from oldest to newest. A post at sequence position $t$ is represented by $J$ features $\{x_{t,1}, \dots, x_{t,J}\}$. Each feature gets encoded by a feature-specific transform $f_j$ such as embedding lookup, log transform, or identity. The resulting post representation is
+\begin{equation}
+X_t = \operatorname{concat}\bigl(f_1(x_{t,1}), \dots, f_J(x_{t,J})\bigr)
+\in \mathbb{R}^{d_{\text{seq}}}.
+\label{eq:xt-concat}
+\end{equation}
+We denote the stacked sequence of post representations by $X_{\text{seq}} = [X_1, X_2, \ldots, X_T]$. Similarly, given a multi-hot action vector for $M$ actions $a_t \in \{0, 1\}^{M}$, we form an action representation $A_t = a_t W_a + b_a\in \mathbb{R}^{d_{\text{seq}}}$ using a learnable projection. The stacked action sequence is $A_{\text{seq}} = [A_1, \ldots, A_T]$. Finally, the $2T$-length transformer input is constructed by interleaving post representations and action representations:
+\begin{equation}
+X_{\text{in}} = [ X_1, A_1, X_2, A_2, \ldots, X_T, A_T ].
+\label{eq:xin}
+\end{equation}
+In our experiments, we set the transformer embedding dimension to be $d_{\text{model}} = d_{\text{seq}}$.
+
+\subsubsection{Transformer architecture and variations}\label{sec:transformer-arch}
+We use a decoder-only transformer with a pre-LayerNorm (Pre-LN) formulation \cite{xiong2020layer}, rotary positional embeddings (RoPE) \cite{su2024roformer}, and scaled residual connections. The forward pass of the block is defined in Eqs.~\eqref{eq:qkv}--\eqref{eq:resid-ffn}.
+
+\begin{align}
+Q,K,V &= W_q\operatorname{LN}(X_{\text{in}}),\; W_k\operatorname{LN}(X_{\text{in}}),\; W_v\operatorname{LN}(X_{\text{in}}) \label{eq:qkv}\\
+Q_r,K_r &= \operatorname{RoPE}(Q,K) \label{eq:rope}\\
+\mathrm{Attn} &= W_o\,\operatorname{Concat}\!\left(\operatorname{SDPA}(Q_r,K_r,V;\text{causal})\right) \label{eq:attn}\\
+Y &= \operatorname{RescaleAndAdd}(X_{\text{in}},\mathrm{Attn}) \label{eq:resid-attn}\\
+Z &= \operatorname{RescaleAndAdd}\!\left(Y,\operatorname{FFN}(\operatorname{LN}(Y))\right) \label{eq:resid-ffn}
+\end{align}
+
+
+
+We adopt a Pre-LN formulation where $\operatorname{LN}(\cdot)$ denotes Layer Normalization \cite{ba2016layer} applied to the input of each sublayer. Equation~\eqref{eq:qkv} computes query, key, and value projections from the normalized input. Equation~\eqref{eq:rope} applies RoPE to $(Q,K)$ to produce $(Q_r,K_r)$. Equation~\eqref{eq:attn} performs causal scaled dot-product attention (SDPA). We concatenate attention heads and apply the output projection $W_o$. Equations~\eqref{eq:resid-attn}--\eqref{eq:resid-ffn} apply scaled residual updates similar to \cite{bachlechner2021rezero}. We define
+\begin{equation}
+\operatorname{RescaleAndAdd}(u,v) \triangleq u + \alpha v,
+\end{equation}
+where $\alpha$ is a learnable scalar. Finally, the transformer output $Z \in \mathbb{R}^{B \times 2T \times d_{\text{model}}}$ is reduced to $\mathbb{R}^{B \times T \times d_{\text{model}}}$ by discarding odd output positions which correspond to action inputs similar to \cite{zhai2024actions}. The result is passed to the head architecture together with the context features $X_{\text{context}}$ for late-fusion prediction; see Sections~\ref{sec:late-fusion} and ~\ref{sec:head-arch} for details.
+
+The pre-LayerNorm formulation is essential for training stability; without it, we observe training AUC collapsing to 0.5. We also evaluated different attention activations in Eq.~\eqref{eq:attn}, including Softmax, Sigmoid, SiLU, and ReLU. Contrary to observations in \cite{zhai2024actions}, Softmax matched or exceeded the performance of Sigmoid, SiLU, and ReLU in our setting. Finally, we experimented with several residual/skip-connection variants, including vanilla residual addition, LayerScale \cite{touvron2021going}, scalar rescaling \cite{bachlechner2021rezero}, and dense gating~\cite{chai2020highway}. Vanilla residual addition led to intermittent training instability (AUC dropping to 0.5 mid-training). Dense gating, LayerScale, and scalar rescaling all performed within marginal AUC differences. Based on this trade-off, {\systemname} uses the scalar \texttt{RescaleAndAdd} skip connection, which provides stable training with minimal additional complexity.
+
+We also evaluated replacing the {\systemname} transformer blocks with HSTU layers~\cite{zhai2024actions}, but observed a consistent performance degradation. For instance, at matched compute ($10^{17}$ FLOPs), the Long Dwell AUC decreases by $0.21\%$ with HSTU. Additional compute-matched comparisons between {\systemname} and HSTU are provided in Appendix~\ref{app:scaling-laws-vs-hstu}.
+
+
+
+
+\subsubsection{Late Fusion of Features}\label{sec:late-fusion}
+As described in Section~\ref{sec:model-input}, an interleaved sequence of post representations $X_{\text{seq}}$ and action representations $A_{\text{seq}}$ are fed to a transformer to obtain embeddings $Z$. A natural approach is to include all available features in $X_{seq}$, which we refer to as \emph{early fusion}. We instead use \emph{late fusion} in which context features are concatenated to the transformer output. This is motivated by both efficiency and modeling considerations. First, early fusion is costly. As the feature set grows, early fusion increases the per-token dimension $d_{\text{seq}}$ and, consequently, the transformer hidden size $d_{\text{model}}$. This increases parameter count and the compute of both attention and MLP blocks, making it harder to meet production latency and throughput constraints. Second, not all signals add value when modeled as part of the historical sequence. For example, the ablations in Section~\ref{sec:features} show that candidate popularity is a strong predictor of relevance, but the popularity of posts in a member's history may only be weakly related to the relevance of the current candidate. So, injecting them into every history token can add noise and dilute capacity from more informative behavioral signals. Motivated by these considerations, we restrict the sequential encoder to a compact set of history features that benefit from temporal modeling, and incorporate additional candidate and context features after the transformer.
+
+Offline experiments show only a small degradation ($0.07\%$) in Long Dwell AUC when moving one-third of the features out of the sequence pathway and into late-fusion. This reduction in the sequence feature dimension decreases the transformer dimension and yields an approximately $12\%$ reduction in per-step training time. The features moved to late-fusion are primarily numeric signals that capture item popularity and viewer--author affinity.
+
+Late fusion also simplifies online serving. History item features no longer need to include the context features, since these features are fetched only for the candidate item at inference time. This reduces feature-fetching overhead, decreases the history storage cost, and can lower serving latency. To validate that this architectural change does not degrade the member experience, we conducted an online A/B test comparing late-fusion against early-fusion. The late-fusion model met or exceeded the early-fusion baseline on true north Feed metrics. 
+
+
+\subsubsection{Head Architecture}\label{sec:head-arch}
+In Section~\ref{sec:late-fusion} we introduced the {\systemname} head architecture, which generates prediction scores. We experiment with several head architectures: (i) \textbf{Linear} (a single affine layer), (ii) \textbf{MLP} (a two-layer MLP with nonlinearity), (iii) \textbf{DCNv2}~\cite{wang2021dcn}, and (iv) \textbf{MMoE}~\cite{ma2018modeling}. Table~\ref{tab:headarch} summarizes their relative offline improvements over the Linear baseline.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+Head Arch. & Long Dwell AUC Lift & Contributions AUC Lift \\ \midrule
+Linear        &  -        &  -        \\
+MLP           & +0.30\%   & +0.54\%   \\
+DCNv2         & +0.32\%   & +0.54\%   \\
+MMoE          & +0.44\%   & +0.58\%   \\ \bottomrule
+\end{tabular}
+\caption{Relative performance improvement of different classification head architectures over the Linear baseline.}
+\label{tab:headarch}
+\vspace{-2.5em}
+\end{table}
+
+
+We observe that MMoE achieves the best performance among the evaluated heads on both Long Dwell and Contributions responses. In MMoE, the fused representation of transformer output and context features is transformed by a set of shared experts, and each task uses a learned gate to combine expert outputs. A common failure mode is expert collapse, where a small subset of experts dominates across tasks. To mitigate collapse, we apply dropout to the post-softmax gates during training. Following the existing Feed ranking model discussed in Section~\ref{sec:existing}, we additionally group tasks into two sets (active vs.\ passive) for gate routing, which improves performance via shared group-level learning. 
+
+
+\subsection{Features}\label{sec:features}
+Section~\ref{sec:existing} summarizes the production LinkedIn Feed ranker feature set. {\systemname} uses a substantially reduced feature set (about $20\%$ of production features), simplifying feature engineering/serving while relying on the transformer to learn many interaction patterns that were previously captured by hand-crafted history transforms.
+
+Motivated by the late-fusion design in Section~\ref{sec:late-fusion}, we split features into \emph{sequence} features $X_{\text{seq}}$ and \emph{context} features $X_{\text{context}}$. $X_{\text{seq}}$ focuses on stable identity/semantic signals (e.g., actor/root-actor ID embeddings, content embedding, lightweight categorical/numeric attributes), while $X_{\text{context}}$ captures candidate-conditional numeric signals (e.g., popularity, dwell-time buckets, post age, and explicit affinity between viewer and action/root-actor). Additional details on features are provided in Appendix~\ref{app:features-cont}. Here, \emph{root actor} denotes the creator of the Feed post, and \emph{actor} denotes the member/entity responsible for the resurfaced Feed post, e.g., a reshare, like, etc. 
+
+Our ablations highlight three takeaways: (1) despite using far fewer features, {\systemname} outperforms the production ranker, suggesting the transformer can replace many manually engineered history transforms; (2) candidate popularity and bucketed dwell-time popularity are still very important for action prediction (e.g., $+2.5\%$ Long Dwell AUC), motivating their inclusion as context features fused after the transformer; and (3) while actor/root-actor ID embeddings capture recurring viewer to actor/root actor interaction patterns, explicit viewer to actor/root-actor affinity features remain complementary (e.g., removing viewer-actor affinity yields a $0.3\%$ Long Dwell AUC drop).
+
+We also explored learned root-object/activity ID embeddings, but excluded them due to freshness challenges under once-per-day incremental training and due to table size/latency overhead at the scale of hundreds of millions of item IDs; instead, we rely on nearline-updated popularity and affinity features to capture item-level dynamics at lower operational cost (Appendix~\ref{app:features-cont}).
+
+\subsection{RoPE vs Learned absolute embeddings.}\label{sec:rope}
+As mentioned in Section~\ref{sec:transformer-arch}, we use rotary positional embeddings (RoPE)~\cite{su2024roformer} to encode token positions. Prior to RoPE, we experimented with additive learned absolute position embeddings, where each token at absolute sequence index $t$ is assigned a learned vector $p_t$ and the transformer input is formed as $x_t + p_t$. In our setting, learned absolute embeddings resulted in unstable average prediction scores during training. We describe this issue in more detail in Appendix~\ref{sec:score-instability}. To mitigate this issue, we replace learned absolute embeddings with RoPE, which encodes position through a shared, deterministic rotation applied to $(Q,K)$, generating $(Q_{r}, K_{r})$, rather than a learned lookup table over absolute indices. The rotation is done equally for a Feed item token and its corresponding action token, assigning them the same position in the sequence. We find that RoPE improves score stability, keeping a coefficient of variation for average predicted scores around 1\%, and also yields metric gains (e.g., +0.20\% Long Dwell AUC) over learned absolute position embeddings.
+
+
+\subsection{Member Profile Embeddings}\label{sec:member-profile-embed}
+Member profile embeddings are an LLM-based dense representation that captures comprehensive information from LinkedIn member profiles. These embeddings are generated by aggregating member profile information with a Qwen3 0.6 billion parameter \cite{yang2025qwen3} fine-tuned model. To efficiently incorporate this dense embedding into the model, we integrate it as a late‑fused context feature, avoiding any increase in the transformer’s dimensionality.
+Adding profile embeddings is particularly valuable for members with short or sparse histories, where {\systemname} lacks historical data. Embeddings are refreshed daily. This means that as members evolve their profiles, the embeddings stay aligned with each member's current professional interests. Empirically, adding profile embeddings as a late‑fused dense feature improves Long‑Dwell AUC, with  more than +2\% AUC gains for members with <10 historical actions.
+
+\subsection{Training Techniques}
+
+\subsubsection{Inverse propensity Weighting and Position Debiasing}
+
+Position bias is a known phenomenon in ML recommender system models in which recommended items that are shown higher on the list receive more engagement, regardless of quality. To combat position effects, we utilized a combination of 2 approaches.
+
+First, we applied Inverse Propensity Weighting (IPW), a method in which per-position propensity scores for click (or other actions) are computed from offline data, and then the loss corresponding to each post during model training is weighted by the inverse of the propensity score corresponding to the position at which that post was shown. Second, during model training we learn explicit parameters for Feed position  \cite{zhao2019recommending}. Specifically, we learn a logit offset for the top-60 feed positions for each label and add this to the final logits. The position of an item during online scoring is unknown, but we found that scoring items with the position set to 5 resulted in a well-calibrated model. Using this, we were able to directly use the objective function weights from the existing production model without further tuning.
+
+\subsubsection{Incremental Training}\label{sec:incremental-training}
+Incremental training is a core component of LinkedIn’s online recommendation system and has proven to be both effective and essential for large-scale social media platforms. LinkedIn Feed’s ranking models are updated daily using newly arrived interaction data, and {\systemname} follows the same paradigm. During cold-start training, the loss is computed over the full interaction history, as described in Section~\ref{sec:architecure}. During incremental updates, we compute the loss only on newly observed interactions, while still providing the full historical sequence as input to the model. Although daily data is dominated by highly active members, we have not observed evidence so far that this incremental training strategy degrades model quality for less frequent members. Early online experiments at low traffic percentages show additional metric gains beyond those reported in Section~\ref{sec:online-results}, which excludes incremental training.
+
+
+
+\subsubsection{Temporal and Positional Loss Weighting}\label{sec:loss-engineering}
+During training, the model learns equally from all items in the history. However, recent interactions may be more relevant to predict a member's future behavior. To this end, we introduce two complementary exponential loss decay mechanisms. Position weighting down-weights earlier positions within each training sequence using exponential decay. With half-life set to the sequence length, the first position receives 50\% weight while the final (most recent) position receives full weight. Additionally, timestamp weighting applies sample-level decay based on data recency. Each training sample is weighted using exponential decay from a reference end timestamp, with a default 60-day half-life such that two-month-old samples receive 50\% weight. Weights are clamped to $[0.0001, 1.0]$ and batch-normalized to maintain gradient scale. Table~\ref{tab:loss-engineering} illustrates offline AUC improvements for {\systemname} from position-weighted and timestamp-weighted loss enhancements.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+Loss & Long Dwell AUC & Contributions AUC \\ \midrule
+Position-weighted          & +0.05\%   & +0.04\%  \\
+Timestamp-weighted          & +0.07\%   & +0.23\%  \\ \bottomrule
+\end{tabular}
+\caption{Relative performance improvements of temporal and positional loss weighting.}
+\label{tab:loss-engineering}
+\vspace{-2.5em}
+\end{table}
+
+
+\subsection{In-Session Leakage}\label{sec:in-session-leakage}
+In {\systemname} we observe a label leakage happening from past interactions in the same session. Unlike non-sequential rankers, {\systemname} constructs sequences from user interaction histories, where consecutive tokens in a sequence often belong to the same user session (in-session interactions occur within a 30-minute window). We find that user feedback signals (e.g., dwell time and clicks) are strongly correlated within a session but much less so across sessions. For example, conditioning on the first item in a session having dwell time $>15$s increases the likelihood that subsequent items in the same session also exceed 15s, relative to items outside the session. Empirically, this leakage leads to overfitting. This is because during training the model can learn from the previous interactions in the same session. However, during serving in-session engagement labels are not available in the interaction history. To mitigate in-session leakage when constructing training sequences, we experimented with (1) randomizing the order of items within each session and (2) masking items from the same session during attention. While the second approach is more principled, we found that both methods resolved the observed overfitting issues. Furthermore, (2) resulted in slower training due to the data-dependent mask creation. We therefore use simple randomization within the session in the final model.
+
+\subsection{Scaling Laws}\label{sec:scaling-laws}
+ We perform experiments to observe scaling behavior in {\systemname}. Figure \ref{fig:scaling-long-dwell} demonstrates how Long Dwell AUC scales with log of the training FLOPS. Scaling parameters here are the sequence length, the number of transformer layers, and the dimension of ID-embeddings. The figure shows that for every order of magnitude increase in training FLOPS, the evaluation Long Dwell AUC improves by approximately 0.0093, demonstrating a consistent positive scaling effect. Training FLOPS are an approximate function of the number of dense parameters times the sequence length \cite{casson2023transformerflops}. 
+We also performed ablations that scale model capacity along a single axis at a time: sequence length, number of transformer layers, and ID embedding dimension. Among these, increasing sequence length exhibits the most consistent scaling behavior across metrics (including Long Dwell AUC and Contributions AUC), suggesting that longer histories more effectively utilize available model capacity. In contrast, scaling depth (more layers) or ID embedding dimension in isolation yields mixed and sometimes non-monotonic gains: while Long Dwell AUC often improves, other metrics such as Contributions AUC can plateau or vary irregularly. Overall, these results suggest that to obtain reliable scaling laws across objectives, capacity should be scaled jointly across multiple dimensions rather than by increasing a single dimension in isolation. Additional details and plots are provided in Appendix~\ref{app:scaling-laws}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{pics/scaling_Long_dwell_seq_length_relative_yaxis.png}
+    \caption{Scaling of Long Dwell AUC as a function of training FLOPS for {\systemname}. Baseline is the current Feed production model.} 
+    \label{fig:scaling-long-dwell}
+    \centering
+\end{figure}
+
+
+\section{Alternative Approaches Considered}\label{sec:alternative-approaches}
+\subsection{LLM-Ranker}
+Before {\systemname}, we explored an LLM-Ranker system in which all the features of a candidate post were represented as text and passed into an LLM as part of a prompt. Given an input prompt with a particular structure and ending with a question such as "Will the member click on this post?", the LLM was fine-tuned to output "Yes" or "No" as the next token. The LLM's output logit for "Yes" was then extracted and interpreted to be the model's prediction for P(click). The same process was used to make predictions for other probabilities of interest (P(like), P(comment), etc.).
+
+This LLM-Ranker showed promising offline results in early experiments and presented various appealing properties. For instance, because the LLM-Ranker was initialized from an already pre-trained LLM (e.g., LLama 3), it already contained a lot of "world knowledge". Furthermore, as the LLM internally also had a transformer-backbone, it also benefited from sequential training and multi-item scoring like {\systemname}.
+
+However, the LLM-Ranker also had several key disadvantages:
+\begin{itemize}
+    \item Although certain features were natural to represent as text in the input prompt, it was difficult to encode numeric features as text (e.g., "\# of Likes: 382"), and the LLM was not always able to leverage them well to improve the model's prediction performance.
+    \item Because it took hundreds of tokens to represent each post, encoding a member's post interaction history took tens of thousands of tokens, making the model expensive to train and serve due to the large sequence input being passed into the transformer. In contrast, although {\systemname} also processes a member's interaction history with a transformer, each post in the history is represented only by 2 tokens (item and action embeddings), which is much more efficient.
+    \item The LLM-Ranker never achieved superior online performance over the existing production model. Although it performed well on posts from out-of-network recommendations, the model struggled with network-based recommendations, because it was difficult to encode the strength of network relationships in a text prompt.
+\end{itemize}
+{\systemname} addresses these limitations through explicit handling of popularity and affinity signals via late fusion, compact post representations that enable efficient serving over long interaction histories, and ID-based embeddings that capture strong network relationships.
+
+\subsection{TransAct}
+We also experimented with augmenting the existing production ranker with history encoding methods such as TransAct \cite{xia2023transact}, Behavioral Sequence Transformer \cite{chen2019behavior}, and Deep Interest Network \cite{zhou2018deep}. TransAct improved offline and online metrics. However, it also resulted in big increases in training time and inference latency, especially for longer sequences. While we prototyped the usage of multi-item scoring in TransAct \cite{hertel2024efficient}, the method was difficult to deploy in a stack implemented for point-wise scoring. Making the sequence the central part of {\systemname} naturally resolved these challenges by amortizing sequence computation during training and inference.
+
+\section{System architecture}
+\subsection{Overview}
+Figure~\ref{fig:system-architecture} shows a high level architecture diagram of the inference infrastructure that powers our {\systemname} system.
+Our inference system employs a disaggregated architecture that separates CPU and GPU workloads to enable independent scaling and optimal resource utilization. This design consists of two primary components working in concert to deliver efficient, low-latency predictions.
+\subsubsection{Disaggregated Inference Components}
+The inference driver is a CPU-based service that handles feature fetching, feature tracking, and request-context-specific CPU-bound transformations. These operations are not GPU-friendly and are therefore isolated from GPU resources. The PyTorch inference server is a Python-based service optimized for GPU execution. It exposes a high-performance gRPC interface that wraps Apache Arrow buffers inside protobuf messages, enabling zero-copy conversion of large data payloads directly to PyTorch tensors. This design eliminates expensive serialization and memory copy operations, allowing the transformer model to process features efficiently on the GPU. The disaggregated setup provides significant operational flexibility, as CPU and GPU workloads can be scaled independently based on their respective bottlenecks and resource requirements.
+\subsubsection{Efficient Feature Serving}
+Our feature serving infrastructure minimizes inference latency through precomputation and efficient data layouts. Member history features are generated offline and stored as compact Arrow columnar buffers in key-value stores, enabling efficient access with low memory overhead. Document features are handled similarly and fetched at serving time.
+
+During inference, the driver retrieves and joins member and document features, then transmits the combined feature set as Arrow bytes to the PyTorch inference server. The system relies on zero-copy conversion between Arrow buffers and PyTorch tensors, which is especially important for large history features. Both services are implemented in Python but restricted to high-performance libraries (NumPy, PyTorch, Arrow) to minimize overhead and maximize throughput.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{pics/system_diagram.png}
+\caption{System Architecture of {\systemname}}
+    \Description{A diagram showing member history venice store, data pipelines, lix setup, feature transformation, {\systemname} service, candidate feature extraction and transformation, score generation.}
+    \label{fig:system-architecture}
+\end{figure}
+
+\subsection{Improving latency and QPS}\label{sec:online-serving}
+
+\subsubsection{CPU-Side Optimization}
+Our inference pipeline was significantly optimized from an initial loop-based, non-vectorized implementation to eliminate CPU-bound data processing bottlenecks. Two key transformations delivered major speedups: member history parsing improved from 450 ms to 2 ms (225×), and sparse-to-dense tensor conversion from 254 ms to 5 ms per feature (50×). As these operations run thousands of times per second, the gains translate directly into higher production throughput.
+Member history parsing was reworked using NumPy strided arrays to enable zero-copy, bulk feature processing. This shifted computation from item-centric loops to feature-centric vectorized access, reducing complexity from O(N×F) to O(F) where N is the number of items and F the number of features, and improving cache locality. Sparse-to-dense conversion was similarly vectorized by replacing nested Python loops with PyTorch tensor indexing and batched assignments, reducing complexity from O(N×M×D) to O(N+M×D) and eliminating per-document overhead, where D is the number of dimensions and M the average number of values per document.
+Together, these changes apply core performance engineering principles such as zero-copy data movement, columnar layouts, and SIMD-friendly vectorization. This resulted in substantial hardware-level gains: 66\% fewer CPU cycles, 71\% fewer instructions, 90\% fewer cache misses, and 72\% fewer branch mispredictions. These improvements are compared to an un-optimized, loop-based implementation. As a result, CPU-bound stages now scale efficiently under high-throughput, real-time inference workloads.
+
+
+\subsubsection{GPU-Side Optimization}\label{sec:online-gpu-optimizations}
+\paragraph{Shared Context Batching}
+The {\systemname} inference pipeline scores $N$ candidates (typically $N=512$) for each member request, using their historical interaction context. Given that the $N$ candidates share the same history, we append all $N$ candidates and compute the scores in a single forward pass via a custom attention mask, similar to M-Falcon \cite{zhai2024actions}. Specifically, we construct an attention mask with two distinct attention patterns: historical context tokens attend to themselves in causal mode and each candidate token attends to all context tokens and itself. This mask is passed to PyTorch's SDPA (\textit{scaled\_dot\_product\_attention}), enabling parallel scoring of all candidates while preventing cross-candidate leakage. By eliminating the redundant processing, we achieve 80x speedup on the transformer forward pass, for typical workloads with approximately 500 candidates and history length 1000.
+
+\paragraph{Custom Flash Attention Kernel} While shared context batching dramatically reduces computation, PyTorch's SDPA falls back to a non-Flash Attention implementation when custom attention masks are provided, forgoing the efficiency benefits of Flash Attention's tiled computation and online (streaming) softmax.
+
+To address this, we developed a specialized CUDA kernel (\textit{SRMIS}) that extends Flash Attention to support {\systemname}'s multi-item scoring  pattern. Unlike standard approaches requiring explicit mask tensors, \textit{SRMIS} accepts two scalar parameters---\texttt{context\_length} and \texttt{candidate\_length}---and implements the requisite attention masking directly within the Flash Attention computation. The attention pattern is fully determined by these parameters: context tokens ($i \leq L$) attend causally to preceding positions, while candidate tokens ($i > L$) attend to all context positions and themselves only.
+
+This design provides three key benefits: (1)~\textit{eliminated mask materialization}, avoiding allocation of $O((L+N)^2)$ mask tensors; (2)~\textit{compute skipping}, where tiles falling entirely outside the valid attention region are skipped without any computation rather than computed then masked; and (3)~\textit{preserved memory efficiency} through Flash Attention's tiled computation. The \textit{SRMIS} kernel achieves an average $2\times$ speedup over masked SDPA, with exact gains dependent on context and candidate lengths.
+
+\subsection{Model Training Optimizations}\label{sec:training-optimizations}
+
+To improve the efficiency of training for {\systemname}, the following key optimizations were implemented. These strategies significantly reduced training time, computational overhead, and resource usage.
+
+\begin{table}[ht]
+\centering
+\small % This command makes the text of the table smaller
+\begin{tabular}{lccc}
+\hline
+\textbf{Optimization Applied} & \textbf{e2e GPU Hours Reduction}\\ \hline
+Efficient Metrics Computation Kernel & 22\% \\
+Optimizer Fusing and Gradient Scaling & 15\% \\ 
+Fused Data Loading and Processing & 50\% \\ 
+Parallelized Evaluation & 16\% \\ 
+\hline
+\end{tabular}
+\caption{Training performance relative improvements}
+\label{table:Training_optimizations_table}
+\vspace{-2.5em}
+\end{table}
+
+\subsubsection{Efficient Metrics Computation Kernel}
+The original multilabel AUC computation was performed sequentially, incurring substantial overhead ($\sim66$ ms per step) due to masked confusion-matrix operations and frequent \texttt{cudaStreamSynchronize} calls. To address this, we implemented a custom fused and bucketized CUDA kernel for training-time AUC computation. By integrating the boolean mask directly into the kernel, we eliminated masking overhead and dynamic memory allocation, reducing metric update time from 66 ms to 0.5 ms per step while preserving metric accuracy (negligible AUC error).
+
+\subsubsection{Optimizer Fusing and Gradient Scaling}
+Optimizer inefficiencies were resolved by switching to a fused Adam implementation with integrated gradient scaling. Enabling the fused optimizer flag and incorporating the gradient scaler directly into the CUDA kernel removed redundant \texttt{cudaStreamSynchronize} calls, reducing optimizer step time from 40 ms to 20 ms.
+
+\subsubsection{Fused Data Loading and Processing}
+Previously, the data loading process involved significant latency ($\sim300$ms) per step due to input/output bottlenecks. To address the data loading bottleneck, we fused padding, batching, and packing operations into a C++ data loader to minimize Python multiprocessing overhead. These changes collectively reduced training step time by >50\%
+
+\subsubsection{Parallelized Evaluation}
+Previously, evaluation was performed in a serialized manner (once after several training steps), while evaluation is taking much less GPU memory compared with training, which causes GPU resource waste. In order to improve GPU efficiency, we save all of the checkpoints during training and run evaluation in parallel for all of the checkpoints at once. In this way, we load the dataset only once and run multiple forward passes in parallel to fully utilize the GPU memory, and reduced the overall runtime by 16\%
+
+\subsection{Additional models in PyTorch inference}
+Online, the ranking model is also combined with a creator model and a downstream session model.  We enable this scoring functionality by implementing a $Scorer$ class that acts as the orchestrator for online scoring. This class runs the forward pass for the three different models and applies the objective function weights to derive the final score. We create a single, shared $Scorer$ checkpoint using the pre-trained ranking, downstream, creator models as part of the deployment process. We use a HuggingFace-style config.json to store class references as well as the objective function weights.
+
+\subsection{Analysis of energy consumption}
+We analyze the relative energy consumption of {\systemname} compared to the previous production model. Results are shown in Table \ref{tab:energy}. The previous production model was trained on the same GPUs, but served online on CPUs. We can see that while training uses more energy for {\systemname}, inference uses in fact less. One contributing factor is that {\systemname} is trained on substantially more data, while the number of inference candidates remains unchanged.
+\begin{table}[htbp]
+\begin{tabular}{@{}lll@{}}
+\toprule
+Energy Consumption & {\systemname} vs. Existing \\ \midrule
+Training           & 3.6x             \\
+Inference          & 0.7x             \\ \bottomrule
+\end{tabular}
+\caption{Relative energy consumption of {\systemname} compared to the previous production model during training and inference.}
+\label{tab:energy}
+\vspace{-2.5em}
+\end{table}
+
+\section{A/B Test Results}\label{sec:online-results}
+Online results for {\systemname} are shown in Table~\ref{tab:online-results}. The table shows relative metric changes compared to the existing production ranking model. Overall, {\systemname} shows +2.10\% increase in time spent. Broken down by member segments, we find that {\systemname} shows the biggest metric gains among the most active member segments while still being positive for less active members and neutral for new members. Note that the online results exclude incremental training (Section~\ref{sec:incremental-training}).
+
+\begin{table}[h]
+\begin{tabular}{@{}llllll@{}}
+\toprule
+           & \multicolumn{5}{c}{Member Segment}                   \\ \midrule
+           & Overall & DAU     & WAU     & MAU     & New          \\
+Time-spent & +2.10\% & +2.38\% & +1.84\% & +0.82\% & Not stat-sig \\ \bottomrule
+\end{tabular}
+\caption{Online results of {\systemname} compared to the production model for time spent.}
+\label{tab:online-results}
+\vspace{-2.5em}
+\end{table}
+
+
+ 
+\section{Deployment Lessons}
+
+{\systemname} represented a complete rewrite of the LinkedIn Feed ranking stack both from a modeling and from and infrastructure perspective. During the process of this work we had several major insights that impacted the course of the project. We discuss these below.
+
+\subsection{Avoiding Negative Sampling in Evaluation}
+While histories are down-sampled, we avoid negative sampling for evaluation candidates to minimize offline–online AUC discrepancies. We found that down-sampling biases evaluation data and inflates offline AUC. Evaluating on the full candidate set yields offline AUCs that better align with online AUCs and top-line metrics.
+
+
+\subsection{Model debugging via offline/online score discrepancy}\label{sec:offline-online-discrepancy}
+A key tool in assessing model correctness online during this work has been to compare offline with online scores on the same items. Specifically, we built a pipeline to score {\systemname} sessions with our offline pipeline. The scores from this pipeline were compared to the logged online scores. Using this process we discovered a large number of bugs in our online stack, whose elimination had a major impact on online metrics.
+
+
+\subsection{Moving away from Java feature transformations}
+Many among the issues from Section \ref{sec:offline-online-discrepancy} were due to offline/online feature discrepancies. Feature transformation was previously handled by shared Java based transformations. With PyTorch, this shared framework is gone and a new one needs to be built. While current online feature transformation is handled by a mix of Java and NumPy/PyTorch transformation, we are building a more principled approach to create Python based shared feature transformations.
+
+
+\section{Conclusion}
+In this paper we have presented {\systemname}, a large-scale sequential recommendation model for LinkedIn's Feed. We have illustrated the modeling choices and system design that allowed us to create a better member experience than the previously existing production ranker. {\systemname} is now the majority member experience on LinkedIn's Feed.
+
+%%
+%% The acknowledgments section is defined using the "acks" environment
+%% (and NOT an unnumbered section). This ensures the proper
+%% identification of the section in the article metadata, and the
+%% consistent spelling of the heading.
+\begin{acks}
+This work represents the joint efforts across multiple teams
+in LinkedIn without whom this would not have been
+possible. We would like to thank Deepak Agarwal, Tim Jurka, Balaji Krishnapuram, Xiaobing Xue, Hristo Danchev, Christine Lin, Sudarshan Ramanujam, Shihai He for supporting this work.
+\end{acks}
+
+%%
+%% The next two lines define the bibliography style to be used, and
+%% the bibliography file.
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{base}
+
+\pagebreak
+%%
+%% If your work has an appendix, this is the place to put it.
+\appendix
+
+\section{Feature definitions and full list}\label{app:features-cont}
+
+\paragraph{Terminology.}
+We use \emph{root actor} to denote the creator of the original feed post, and \emph{actor} to denote the member/entity responsible for the surfaced feed unit (e.g., a reshare) or the entity that performed an activity (e.g., like). The original post is referred to as the \emph{root object}, and subsequent events such as reshares are referred to as \emph{activities}. \emph{Affinity} denotes the connection strength between a viewer and an actor/root actor, measured via historical engagement signals.
+
+\paragraph{Sequence features ($X_{\text{seq}}$).}
+Sequence features are defined per item in the interaction history (one feature vector per sequence position) and form the per-timestep input to the transformer. We include:
+\begin{itemize}
+    \item \textbf{Actor/root-actor hashed ID embeddings.} Learned hashed ID embeddings for actor ID and root actor ID using a shared embedding table. Engagements on Linkedin feed are driven by viewer's network where viewers tend to have repeated interactions within their network and have recurring preferences towards specific actors/root actors. Actor/root actor ID embedding is an essential to capture this viewer to actor/ root actor affinity signal.
+    \item \textbf{Content embedding.} A 50-dimensional post embedding from LinkedIn's post embedding model~\cite{srinivasa2025linkedin}.
+    \item \textbf{Categorical features.} Actor type and root actor type (e.g., member, company), verb type (e.g., share, repost), object type (e.g., article, multi-photo, video), viewer device OS, and whether the viewer is connected to the root actor.
+    \item \textbf{Numeric features.} Actor popularity/engagement aggregated across time windows; viewer--actor dwell-time affinity across multiple windows/quantiles; and viewer network size.
+\end{itemize}
+
+\paragraph{Context features ($X_{\text{context}}$).}
+Context features describe the candidate post and the viewer--candidate relationship at prediction time, and are concatenated with the transformer output in the late-fusion head. These features are primarily numeric and include:
+\begin{itemize}
+    \item \textbf{Viewer--(root-)actor affinity.} Time-segmented vectors capturing clicks/likes/impressions over multiple horizons (e.g., 7--365 days).
+    \item \textbf{Candidate popularity.} Candidate-level popularity counts for the root object and activity (e.g., clicks/likes/impressions).
+    \item \textbf{Bucketed dwell-time popularity.} Bucketed dwell-time counts for the candidate (e.g., 0--5s up to $>$60s), which is particularly important for Long Dwell prediction (e.g., $+2.5\%$ absolute Long Dwell AUC lift in our ablations).
+    \item \textbf{Additional context.} Feed post age and viewer network strength.
+\end{itemize}
+
+\paragraph{Why we do not use root-object/activity ID embedding tables.}
+We explored learned ID embeddings for root object ID and activity ID, but excluded them due to:
+\begin{enumerate}
+    \item \textbf{Freshness and non-stationarity.} Feed activities and popularity evolve rapidly and benefit from nearline updates; once-per-day incremental training is insufficient to keep large ID embedding tables fresh without continual-learning infrastructure.
+    \item \textbf{Scale and latency.} Object IDs can number in the hundreds of millions, leading to very large embedding tables that increase training cost and serving latency/memory footprint.
+\end{enumerate}
+Instead, we rely on nearline-updated popularity and affinity features (often aggregated over long horizons) to retain most of the predictive benefit with lower operational cost.
+
+
+\section{Scaling Laws}\label{app:scaling-laws}
+In Section \ref{sec:scaling-laws} we illustrated scaling laws for {\systemname}. Here, we expand on those results. Figure \ref{fig:scaling-Contributions} provides Contributions AUC scaling with log of the training FLOPS. 
+
+Furthermore, we discuss results of scaling sequence length, number of transformer layers and ID embedding dimension individually. Figures ~\ref{fig:scaling-layers}, \ref{fig:scaling-id-dim}, and \ref{fig:scaling-seq-length} show Long Dwell AUC and contribution AUC when scaling sequence length, number of transformer layers, or ID embedding dimension while holding everything else constant. From these plots we make the following observations about scaling laws when model capacity is scaled in isolation. Increasing the sequence length consistently demonstrates clear scaling laws across all evaluation metrics, including Long Dwell AUC, and Contributions AUC. This suggests that longer sequences effectively leverage the model's capacity for improved performance. Similar observation can be made from Figure \ref{fig:scaling-seq-length}. In contrast, independently increasing the ID embedding dimension or the number of transformer layers does not consistently demonstrate scaling laws for Contribution AUC. While some metrics, such as Long Dwell AUC, show an upward trend with scaling, others, like Contributions AUC, exhibit irregular or plateauing behavior. These observations suggest that to fully realize scaling laws across all metrics, it is necessary to scale multiple dimensions simultaneously rather than in isolation. 
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{pics/scaling-contributions-relative.png}
+    \caption{Scaling of Contributions AUC as a function of training FLOPS for {\systemname}.}
+    \label{fig:scaling-Contributions}
+    \centering
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{pics/scaling-ne-relative.png}
+    \caption{Scaling of normalized evaluation entropy as a function of training FLOPS for {\systemname}.
+    }
+    \label{fig:scaling-flops-ne}
+    \centering
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{pics/scaling-layers-seq-256-ld-contributions-relative.png}
+    \caption{Scaling number of transformer layers while keeping all other hyper parameters (sequence length, id embedding dimension) constant.}
+    \label{fig:scaling-layers}
+    \centering
+    % \vspace{-1.0em}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{pics/scalling-id-embedding-ld-contirbutions-relative.png}
+    \caption{Scaling id embedding dimension while keeping all other hyper parameters (number of transformer layers, sequence length) constant.}
+    \label{fig:scaling-id-dim}
+    \centering
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{pics/scaling-seq-length-longdwell-contributions-relative.png}
+    \caption{Scaling sequence length while keeping all other hyper parameters  (number of transformer layers, id embedding dimension) constant.}
+    \label{fig:scaling-seq-length}
+    \centering
+    % \vspace{-1.0em}
+\end{figure}
+
+
+\section{Scaling laws: {\systemname} vs.\ HSTU}
+\label{app:scaling-laws-vs-hstu}
+
+We extend the comparison between {\systemname} and HSTU \cite{zhai2024actions} discussed in Section~\ref{sec:scaling-laws}. Figures~\ref{fig:scaling-flops-ld-vs-hstu} and~\ref{fig:scaling-flops-contributions-vs-hstu} report compute-matched scaling results for Long Dwell and Contributions AUC. Across the range of compute we were able to evaluate, HSTU underperforms {\systemname} on both metrics. We want to state that the evaluation results in Figure \ref{fig:scaling-flops-ld-vs-hstu} and \ref{fig:scaling-flops-contributions-vs-hstu} were obtained on a different evaluation dataset than the results in Figure \ref{fig:scaling-long-dwell}, \ref{fig:scaling-Contributions}, \ref{fig:scaling-flops-ne}, \ref{fig:scaling-layers}, \ref{fig:scaling-id-dim}, \ref{fig:scaling-seq-length}.
+
+We train HSTU models using the open-source implementation released by the authors\footnote{\url{https://github.com/meta-recsys/generative-recommenders}}. For larger model configurations, the open-source HSTU code runs out of memory; therefore, we omit HSTU results beyond $\log(\mathrm{FLOPs})=18$. In contrast, we are able to train larger configurations with the {\systemname} transformer blocks using open-source tooling, in part because they are compatible with standard FlashAttention~\cite{dao2022flashattention}, whereas the HSTU implementation is not. 
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{pics/scaling-longdwell-gr-vs-hstu.png}
+    \caption{Scaling of Long Dwell AUC as a function of training FLOPS for {\systemname} vs HSTU.}
+    \Description{A plot showing the Long Dwell as a function of training FLOPS for {\systemname} and HSTU models.}
+    \label{fig:scaling-flops-ld-vs-hstu}
+    \centering
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{pics/scaling-contributions-vs-hstu.png}
+    \caption{Scaling of Contributions AUC as a function of training FLOPS for {\systemname} and HSTU.}
+    \Description{A plot showing the contributions auc as a function of training FLOPS for {\systemname} and HSTU models.}
+    \label{fig:scaling-flops-contributions-vs-hstu}
+    \centering
+\end{figure}
+
+
+
+
+\section{Score Instability with Position Embeddings}\label{sec:score-instability}
+We hypothesize that this instability is driven by data imbalance across absolute positions. The position-embedding table contains parameters for all indices up to $T_{\max}$, but the empirical distribution of sequence lengths is highly skewed (Figure~\ref{fig:count-histogram}). Most training examples have short histories, so embeddings corresponding to large absolute indices receive few updates and are under-trained. This is especially harmful for highly active users with long interaction histories, where tokens at large absolute positions are common and contribute meaningfully to prediction quality.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{pics/poor_calibration_position_embedding.png}
+    \caption{Average label and average prediction score versus training steps when using learned absolute position embeddings. The average label (orange) remains stable, while the average prediction (blue) exhibits large drift, indicating poor calibration. Y-axis values are omitted due to legal reasons.}
+    \label{fig:poor-cal}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{pics/count_histogram_sequence_length.png}
+    \caption{Histogram of viewer sequence lengths in the training dataset. The distribution is highly skewed, with a long tail of short histories; as a result, large absolute position indices are under-represented during training. Y-axis values are omitted due to legal reasons.}
+    \label{fig:count-histogram}
+\end{figure}
+
+\section{Longer Viewer Interaction History Period}\label{app:longer-seq}
+We experimented with using 6 months versus 1 year of historical data to construct viewer history sequences, while keeping the maximum sequence length fixed at 1000, as described in Section \ref{sec:architecure}. 
+Using 1 year of history resulted in a 0.21\% Long Dwell AUC lift and a 0.15\% Contribution AUC lift. This change also led to a 12\% increase in training time due to the longer history of members. 
+The new sequence also increases member coverage by +20\%.
+
+
+\end{document}
+\endinput
+% end of file

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed SR: Industrial-Scale Sequential Recommender for LinkedIn Feed | Hailing Cheng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2f4a;
+            --accent: #e85d04;
+            --accent-light: #faa307;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --code-bg: #f7f8fc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            line-height: 1.8;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(232, 93, 4, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(250, 163, 7, 0.04) 0%, transparent 50%),
+                linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .article-header {
+            padding: 4rem 0 3rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .article-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .article-badge {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .authors {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .authors strong {
+            color: var(--text);
+        }
+
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: #f0f4f8;
+            color: var(--primary);
+            padding: 0.4rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .paper-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .paper-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            text-decoration: none;
+            padding: 0.85rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(232, 93, 4, 0.25);
+        }
+
+        .paper-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 93, 4, 0.35);
+        }
+
+        .paper-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        article {
+            padding: 3rem 0;
+        }
+
+        article h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2.5rem 0 1rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        article h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.2em;
+            bottom: 0.2em;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-light));
+            border-radius: 2px;
+        }
+
+        article h2:first-child {
+            margin-top: 0;
+        }
+
+        article h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 2rem 0 0.75rem;
+        }
+
+        article p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        article ul, article ol {
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+        }
+
+        article li {
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+        }
+
+        article li strong {
+            color: var(--primary);
+        }
+
+        .highlight-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        .math-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 47, 74, 0.08);
+        }
+
+        .result-value {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .result-sublabel {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.93rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: var(--code-bg);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(232, 93, 4, 0.03);
+        }
+
+        .improvement {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            .article-header {
+                padding: 2.5rem 0 2rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            article h2 {
+                font-size: 1.35rem;
+            }
+
+            .result-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="../index.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Blog
+            </a>
+        </nav>
+
+        <header class="article-header">
+            <div class="article-meta">
+                <span class="article-date">KDD 2026</span>
+                <span class="article-badge">Research Paper</span>
+            </div>
+            <h1>An Industrial-Scale Sequential Recommender for LinkedIn Feed Ranking</h1>
+            <p class="authors">
+                By Lars Hertel, Gaurav Srivastava, Syed Ali Naqvi, Satyam Kumar, Yue Zhang,
+                Borja Ocejo, Benjamin Zelditch, Adrian Englhardt, <strong>Hailing Cheng</strong>,
+                Andy Hu, Antonio Alonso, Daming Li, Siddharth Dangi, Chen Zhu, Mingzhou Zhou,
+                Wanning Li, Tao Huang, Fedor Borisyuk, Ganesh Parameswaran, Birjodh Tiwana,
+                Sriram Sankar, Qing Lan, Julie Choi, Souvik Ghosh<br>
+                LinkedIn Inc.
+            </p>
+            <div class="article-tags">
+                <span class="tag">Sequential Recommendation</span>
+                <span class="tag">Generative Recommendation</span>
+                <span class="tag">Transformers</span>
+                <span class="tag">Ranking</span>
+                <span class="tag">Industrial ML</span>
+            </div>
+            <div class="paper-links">
+                <a href="../papers/LiGR/LiGR.pdf" class="paper-link" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    Download Paper (PDF)
+                </a>
+            </div>
+        </header>
+
+        <article>
+            <h2>TL;DR</h2>
+            <p>
+                We present <strong>Feed SR</strong> (Feed Sequential Recommender), a transformer-based sequential ranking model that replaces LinkedIn Feed's DCNv2-based ranker and is now the primary experience for over 1.2 billion members. Feed SR achieves <strong>+2.10% time spent</strong> in online A/B tests by interleaving item and action tokens through a causal transformer, fusing rich production features via late fusion, and deploying with custom GPU kernels that enable real-time inference at LinkedIn scale.
+            </p>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-value">+2.10%</div>
+                    <div class="result-label">Time Spent (Overall)</div>
+                    <div class="result-sublabel">vs. production DCNv2 ranker</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">+2.38%</div>
+                    <div class="result-label">Time Spent (DAU)</div>
+                    <div class="result-sublabel">daily active users</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">80×</div>
+                    <div class="result-label">GPU Speedup</div>
+                    <div class="result-sublabel">shared context batching</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value">0.7×</div>
+                    <div class="result-label">Inference Energy</div>
+                    <div class="result-sublabel">vs. CPU-served predecessor</div>
+                </div>
+            </div>
+
+            <h2>The Challenge: Sequential Recommendation at LinkedIn Scale</h2>
+            <p>
+                LinkedIn Feed ranks posts in real time for over 1.2 billion members. The activity distribution is long-tailed—some members have thousands of interactions, while others have just a few. The corpus spans billions of posts that are highly dynamic, with much of a post's engagement concentrated in the first 24 hours after publishing. Any ranking model must handle all of this while meeting strict latency constraints for real-time serving.
+            </p>
+            <p>
+                Sequential recommendation models have shown strong promise for capturing temporal patterns and long-range user interests, but deploying one at this scale requires solving non-trivial modeling, training, and infrastructure problems simultaneously.
+            </p>
+
+            <h2>Model Architecture</h2>
+
+            <h3>Interleaved Item–Action Sequences</h3>
+            <p>
+                Feed SR processes a member's interaction history as an interleaved sequence of post representations and action representations, up to the most recent 1,000 impressions from the past year. For each post at position <em>t</em>, features are encoded and concatenated into a compact token <code>X_t</code>. The corresponding action (click, like, long-dwell, etc.) is projected into an action token <code>A_t</code> via a learnable linear map. The resulting 2T-length input to the transformer is:
+            </p>
+            <div class="math-block">
+                X<sub>in</sub> = [X<sub>1</sub>, A<sub>1</sub>, X<sub>2</sub>, A<sub>2</sub>, ..., X<sub>T</sub>, A<sub>T</sub>]
+            </div>
+            <p>
+                After the transformer blocks, outputs corresponding to action positions are discarded, leaving one contextualized embedding per post that encodes the full causal interaction history.
+            </p>
+
+            <h3>Transformer with RoPE and Scaled Residuals</h3>
+            <p>
+                Feed SR uses a decoder-only transformer with Pre-LayerNorm, Rotary Positional Embeddings (RoPE), and scaled residual connections (<code>RescaleAndAdd</code>). We found Pre-LN essential for training stability—without it, training AUC collapsed to 0.5. Vanilla residual addition caused intermittent instability mid-training, while scalar rescaling (a single learnable α per block) provided stability with minimal added complexity.
+            </p>
+            <p>
+                We compared RoPE against learned absolute positional embeddings and found the latter caused systematic score drift: the average predicted score diverged significantly from the average label over training. The root cause is data imbalance—most members have short histories, so embeddings at large absolute indices are severely under-trained. RoPE, which encodes position through a deterministic rotation of query-key pairs rather than a lookup table, eliminates this instability and yields +0.20% Long Dwell AUC.
+            </p>
+
+            <h3>Late Fusion of Production Features</h3>
+            <p>
+                A naive approach would put all features into the interleaved sequence (early fusion). Feed SR instead uses <strong>late fusion</strong>: a compact set of features most useful for temporal modeling (actor/root-actor ID embeddings, content embeddings, categorical attributes) form the sequence tokens, while candidate-conditional numeric signals—popularity counts, bucketed dwell-time statistics, viewer–actor affinity—are concatenated to the transformer output before the prediction head.
+            </p>
+            <p>
+                This design has two key benefits. First, it keeps the per-token sequence dimension small, reducing transformer FLOP count and serving latency. Moving one-third of features to late fusion yields a 12% reduction in per-step training time with only a 0.07% Long Dwell AUC degradation. Second, it correctly separates signals: popularity of a candidate post is highly predictive of engagement, but the popularity of posts in a member's history is not—injecting it into every history token adds noise.
+            </p>
+            <p>
+                An online A/B test confirmed that late fusion matches or exceeds early fusion on true-north Feed metrics.
+            </p>
+
+            <h3>MMoE Head and Multi-Task Learning</h3>
+            <p>
+                After the transformer, the fused representation passes through an MMoE head that routes to task-specific gates for predicting multiple actions (long-dwell, contributions, clicks, etc.). Tasks are grouped into active (like, comment, share) and passive (click, skip, long-dwell) sets for gate routing, following the existing production model structure.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Head Architecture</th>
+                        <th>Long Dwell AUC Lift</th>
+                        <th>Contributions AUC Lift</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Linear (baseline)</td>
+                        <td>—</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td>MLP</td>
+                        <td>+0.30%</td>
+                        <td>+0.54%</td>
+                    </tr>
+                    <tr>
+                        <td>DCNv2</td>
+                        <td>+0.32%</td>
+                        <td>+0.54%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MMoE</strong></td>
+                        <td class="improvement"><strong>+0.44%</strong></td>
+                        <td class="improvement"><strong>+0.58%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Member Profile Embeddings for Cold Members</h2>
+            <p>
+                Members with short or sparse interaction histories present a fundamental challenge for sequential models—there simply isn't enough behavioral signal in the sequence. Feed SR addresses this by integrating <strong>member profile embeddings</strong>: dense representations of LinkedIn profile content generated by a fine-tuned Qwen3 0.6B model. These embeddings are refreshed daily and injected as a late-fused context feature, keeping the transformer dimension unchanged.
+            </p>
+            <p>
+                For members with fewer than 10 historical actions, profile embeddings deliver more than <strong>+2% Long Dwell AUC</strong>, substantially narrowing the performance gap for cold-start and infrequent members.
+            </p>
+
+            <h2>Training Techniques</h2>
+
+            <h3>Temporal and Positional Loss Weighting</h3>
+            <p>
+                Feed SR applies two complementary exponential loss decay mechanisms during training. <strong>Position weighting</strong> down-weights earlier positions in the sequence with a half-life equal to the sequence length, so the most recent interaction receives full weight while the oldest receives 50%. <strong>Timestamp weighting</strong> applies sample-level decay based on data recency with a 60-day half-life. Together these encourage the model to prioritize learning from recent, relevant behavior.
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Loss Enhancement</th>
+                        <th>Long Dwell AUC</th>
+                        <th>Contributions AUC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Position-weighted</td>
+                        <td>+0.05%</td>
+                        <td>+0.04%</td>
+                    </tr>
+                    <tr>
+                        <td>Timestamp-weighted</td>
+                        <td>+0.07%</td>
+                        <td>+0.23%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>In-Session Leakage</h3>
+            <p>
+                Sequential models face a subtle label leakage problem: consecutive tokens in a sequence often belong to the same browsing session, and engagement signals (dwell time, clicks) are strongly correlated within a session. The model can learn to exploit this during training, but in production, in-session labels are never available. Feed SR mitigates this by randomizing item order within each session during training sequence construction, which resolves overfitting with less computational overhead than session-level attention masking.
+            </p>
+
+            <h3>Incremental Training</h3>
+            <p>
+                Feed SR follows LinkedIn's standard daily incremental training paradigm. Cold-start training uses the full interaction history. Subsequent daily updates compute loss only on newly observed interactions while still providing the full history as context. Early online experiments show additional gains from incremental training beyond those reported in the main A/B test results.
+            </p>
+
+            <h2>Scaling Laws</h2>
+            <p>
+                Feed SR exhibits consistent scaling behavior with training compute. For every order of magnitude increase in training FLOPs, Long Dwell AUC improves by approximately 0.0093. Among individual scaling dimensions, <strong>sequence length</strong> shows the most reliable and consistent gains across all metrics—more history consistently helps. Scaling depth (more transformer layers) or ID embedding dimension in isolation yields mixed results, with some metrics plateauing or varying non-monotonically. Reliable scaling across all objectives requires scaling multiple dimensions jointly.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>Key scaling insight:</strong> Scaling sequence length from 6 months to 1 year of history yields +0.21% Long Dwell AUC and +0.15% Contributions AUC, increases member coverage by +20%, and costs only a 12% increase in training time—an unusually favorable tradeoff.
+                </p>
+            </div>
+
+            <h2>System Architecture and Serving</h2>
+
+            <h3>Disaggregated CPU–GPU Inference</h3>
+            <p>
+                Feed SR's inference infrastructure separates CPU and GPU workloads. A CPU-based inference driver handles feature fetching and request-context transformations. A GPU-based PyTorch inference server exposes a gRPC interface wrapping Apache Arrow buffers in protobuf messages, enabling zero-copy conversion of feature payloads directly to PyTorch tensors—eliminating expensive serialization for the large history features.
+            </p>
+
+            <h3>Shared Context Batching: 80× GPU Speedup</h3>
+            <p>
+                A member request scores N candidates (typically N=512) that all share the same interaction history. Rather than running N separate forward passes, Feed SR appends all candidates and scores them in a single forward pass using a custom attention mask:
+            </p>
+            <ul>
+                <li>History tokens attend to each other causally.</li>
+                <li>Each candidate token attends to all history tokens and itself only.</li>
+                <li>Candidates do not attend to each other, preventing cross-candidate leakage.</li>
+            </ul>
+            <p>
+                This shared context batching achieves an <strong>80× speedup</strong> on the transformer forward pass for typical workloads (512 candidates, history length 1000).
+            </p>
+
+            <h3>Custom SRMIS Flash Attention Kernel</h3>
+            <p>
+                PyTorch's <code>scaled_dot_product_attention</code> falls back to a non-Flash implementation when custom masks are provided, losing the memory and compute benefits of tiled Flash Attention. We developed <strong>SRMIS</strong>, a custom CUDA kernel that extends Flash Attention to support Feed SR's multi-item scoring pattern. Instead of materializing an explicit mask tensor, SRMIS accepts two scalar parameters (<code>context_length</code>, <code>candidate_length</code>) and encodes the attention pattern directly in the kernel.
+            </p>
+            <p>
+                SRMIS provides three benefits: (1) eliminates O((L+N)²) mask tensor allocation, (2) skips computation for tiles entirely outside the valid attention region, and (3) preserves Flash Attention's tiled memory efficiency. The result is a <strong>2× speedup</strong> over masked SDPA.
+            </p>
+
+            <h3>CPU-Side Optimizations</h3>
+            <p>
+                Two critical CPU-bound operations were vectorized using NumPy and PyTorch tensor operations:
+            </p>
+            <ul>
+                <li><strong>Member history parsing:</strong> Reworked with NumPy strided arrays for zero-copy bulk processing, reducing latency from 450 ms to 2 ms (225×).</li>
+                <li><strong>Sparse-to-dense tensor conversion:</strong> Replaced nested Python loops with vectorized PyTorch indexing, reducing from 254 ms to 5 ms (50×).</li>
+            </ul>
+            <p>
+                Together these yield 66% fewer CPU cycles, 71% fewer instructions, 90% fewer cache misses, and 72% fewer branch mispredictions compared to the original loop-based implementation.
+            </p>
+
+            <h2>Alternatives We Considered</h2>
+
+            <h3>LLM-Ranker</h3>
+            <p>
+                We explored representing all candidate features as text and fine-tuning an LLM (initialized from LLaMA 3) to predict engagement. The approach showed promising offline results but had fundamental limitations:
+            </p>
+            <ul>
+                <li>Numeric features (e.g., "# of Likes: 382") were difficult to encode as text, and the model struggled to leverage them effectively.</li>
+                <li>Encoding a member's post history required tens of thousands of tokens per request, making training and serving prohibitively expensive compared to Feed SR's 2-token-per-post representation.</li>
+                <li>Network-based recommendations were hard to handle—the strength of social connections cannot be easily expressed in a text prompt.</li>
+            </ul>
+
+            <h3>TransAct</h3>
+            <p>
+                Augmenting the existing DCNv2 ranker with TransAct-style history encoding improved offline and online metrics but resulted in large increases in training time and inference latency for longer sequences. Feed SR resolves these issues by making the sequence central to the model architecture, enabling amortized sequence computation via shared context batching during both training and inference.
+            </p>
+
+            <h3>HSTU Layers</h3>
+            <p>
+                We evaluated replacing Feed SR's transformer blocks with HSTU layers and observed consistent performance degradation. At matched compute (10¹⁷ FLOPs), HSTU reduces Long Dwell AUC by 0.21%. Feed SR's standard transformer blocks are also compatible with off-the-shelf FlashAttention tooling, whereas the HSTU implementation is not, creating practical scaling limitations.
+            </p>
+
+            <h2>Deployment Lessons</h2>
+
+            <h3>Avoid Negative Sampling in Evaluation</h3>
+            <p>
+                The training data down-samples negative impressions (0.1 retention probability). Applying the same down-sampling to evaluation inflates offline AUC and creates a larger offline–online discrepancy. Evaluating on the full candidate set yields AUCs that better predict online behavior.
+            </p>
+
+            <h3>Offline–Online Score Comparison Pipeline</h3>
+            <p>
+                A key debugging tool was running Feed SR sessions through the offline pipeline and comparing predicted scores against logged online scores for the same items. This process uncovered a large number of bugs in the online serving stack—most rooted in offline/online feature transformation discrepancies when moving from Java-based to Python/PyTorch-based feature transforms.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    <strong>Practical lesson:</strong> In a complete rewrite of a ranking stack, the offline–online score discrepancy pipeline is as important as any modeling innovation. Systematic comparison of scores on identical inputs is the fastest way to surface serving bugs that are otherwise invisible in aggregate metrics.
+                </p>
+            </div>
+
+            <h2>Online Results</h2>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Overall</th>
+                        <th>DAU</th>
+                        <th>WAU</th>
+                        <th>MAU</th>
+                        <th>New Members</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Time Spent</td>
+                        <td class="improvement">+2.10%</td>
+                        <td class="improvement">+2.38%</td>
+                        <td class="improvement">+1.84%</td>
+                        <td class="improvement">+0.82%</td>
+                        <td>Not stat-sig</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Feed SR shows the largest gains for daily active members who have rich interaction histories and benefit most from sequential modeling, while remaining positive for less active members. New members see no significant change—they lack the history that sequential models depend on, making profile embeddings (and future work on cold-start) critical for this segment.
+            </p>
+
+            <p>
+                Feed SR is now the <strong>primary member experience on LinkedIn's Feed</strong>, having replaced the previously deployed DCNv2 ranker entirely.
+            </p>
+        </article>
+
+        <footer>
+            <p>© 2026 Hailing Cheng · Hosted on <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
+        </footer>
+    </div>
+</body>
+</html>
